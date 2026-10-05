@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../models.dart';
 import '../../services/app_data.dart';
 
@@ -50,182 +52,62 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
     }
   }
 
-  // Option A: Open Simulated Live Camera Modal
-  void _openCameraScannerModal() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.black,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height * 0.80,
-              child: Column(
-                children: [
-                  AppBar(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    title: const Text('Camera Scanner Viewfinder', style: TextStyle(fontSize: 16)),
-                    actions: [
-                      IconButton(
-                        icon: const Icon(Icons.flash_on, color: Colors.amber),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade900,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFF4F46E5), width: 2),
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.document_scanner, size: 72, color: Color(0xFF4F46E5)),
-                              SizedBox(height: 12),
-                              Text('Align Document Inside Grid', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                              Text('Auto-Edge Detection Enabled', style: TextStyle(color: Colors.white54, fontSize: 12)),
-                            ],
-                          ),
-                          Positioned(
-                            bottom: 20,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                'Pages Captured: ${_scannedPages.length}',
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          label: const Text('Done', style: TextStyle(color: Colors.white)),
-                        ),
-                        // Shutter Button
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _scannedPages.add({
-                                'title': 'Page ${_scannedPages.length + 1}: Captured Document Photo',
-                                'time': '${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
-                              });
-                            });
-                            setModalState(() {});
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('📸 Captured Page ${_scannedPages.length} successfully!')),
-                            );
-                          },
-                          child: Container(
-                            height: 70,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              border: Border.all(color: const Color(0xFF4F46E5), width: 4),
-                            ),
-                            child: const Icon(Icons.camera, color: Color(0xFF4F46E5), size: 36),
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: () {
-                            _previewScannedPdf();
-                          },
-                          icon: const Icon(Icons.picture_as_pdf, color: Color(0xFF22C55E)),
-                          label: const Text('Preview PDF', style: TextStyle(color: Color(0xFF22C55E))),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+  // Option A: Real Device Camera Capture
+  Future<void> _captureRealCameraPhoto() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? photo = await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+      if (photo != null) {
+        setState(() {
+          _scannedPages.add({
+            'title': 'Page ${_scannedPages.length + 1}: ${photo.name}',
+            'time': '${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+          });
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('📸 Captured Page ${_scannedPages.length}: ${photo.name}')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Camera error / permission: $e')),
         );
-      },
-    );
+      }
+    }
   }
 
-  // Option B: Open Storage File Picker Modal
-  void _openFilePickerModal() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        final sampleFiles = [
-          {'name': 'Class_10_Math_Formula_Sheet.pdf', 'size': '2.8 MB', 'pages': 12},
-          {'name': 'Science_Physics_Magnetism_Notes.pdf', 'size': '4.2 MB', 'pages': 18},
-          {'name': 'Commerce_Accountancy_TrialBalance.pdf', 'size': '1.9 MB', 'pages': 8},
-          {'name': 'English_Grammar_Complete_Guide.pdf', 'size': '3.1 MB', 'pages': 15},
-        ];
-
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Select PDF File from Device', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
-                ],
-              ),
-              const Divider(),
-              ...sampleFiles.map((f) => ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(8)),
-                  child: const Icon(Icons.picture_as_pdf, color: Colors.red),
-                ),
-                title: Text(f['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                subtitle: Text('Size: ${f['size']} • ${f['pages']} Pages', style: const TextStyle(fontSize: 11)),
-                onTap: () {
-                  setState(() {
-                    _pickedFileName = f['name'] as String;
-                    _pickedFileSize = f['size'] as String;
-                    _pickedFilePages = f['pages'] as int;
-                    if (_titleController.text.isEmpty) {
-                      _titleController.text = _pickedFileName!.replaceAll('.pdf', '').replaceAll('_', ' ');
-                    }
-                  });
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('📄 Selected file: ${_pickedFileName!}')),
-                  );
-                },
-              )),
-            ],
-          ),
+  // Option B: Real Native File / Gallery Picker
+  Future<void> _pickRealDeviceFile() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+      if (file != null) {
+        final bytes = await file.length();
+        final sizeMb = (bytes / (1024 * 1024)).toStringAsFixed(1);
+        setState(() {
+          _pickedFileName = file.name;
+          _pickedFileSize = '$sizeMb MB';
+          _pickedFilePages = 10;
+          if (_titleController.text.isEmpty) {
+            _titleController.text = file.name.replaceAll('_', ' ');
+          }
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('📄 Selected File: ${file.name} ($sizeMb MB)')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('File picker error: $e')),
         );
-      },
-    );
+      }
+    }
   }
 
   // Preview PDF Document Modal
@@ -636,9 +518,9 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
             const Text('Option A: Multi-Page Camera Scan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF4F46E5))),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
-              onPressed: _openCameraScannerModal,
+              onPressed: _captureRealCameraPhoto,
               icon: const Icon(Icons.camera_alt, size: 16),
-              label: const Text('Launch Camera', style: TextStyle(fontSize: 11)),
+              label: const Text('Open Camera', style: TextStyle(fontSize: 11)),
             ),
           ],
         ),
@@ -677,7 +559,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
         const SizedBox(height: 10),
 
         InkWell(
-          onTap: _openFilePickerModal,
+          onTap: _pickRealDeviceFile,
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
@@ -691,7 +573,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                 const Icon(Icons.cloud_upload_outlined, size: 46, color: Color(0xFF4F46E5)),
                 const SizedBox(height: 8),
                 Text(
-                  _pickedFileName ?? 'Click to select PDF/JPG/PNG file',
+                  _pickedFileName ?? 'Click to select PDF/JPG/PNG file from storage',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF4F46E5)),
                 ),
                 const SizedBox(height: 4),

@@ -495,6 +495,36 @@ class AppData extends ChangeNotifier {
     }
   }
 
+  bool changeCurrentUserPassword(String oldPassword, String newPassword) {
+    if (currentUser == null) return false;
+    if (currentUser!.password != oldPassword && currentUser!.studentPin != oldPassword) {
+      return false;
+    }
+    final index = users.indexWhere((u) => u.id == currentUser!.id);
+    if (index != -1) {
+      final updated = UserModel(
+        id: currentUser!.id,
+        name: currentUser!.name,
+        email: currentUser!.email,
+        password: newPassword,
+        role: currentUser!.role,
+        status: currentUser!.status,
+        assignedClass: currentUser!.assignedClass,
+        rollNo: currentUser!.rollNo,
+        phone: currentUser!.phone,
+        parentPhone: currentUser!.parentPhone,
+        address: currentUser!.address,
+        studentPin: newPassword,
+        isArchived: currentUser!.isArchived,
+      );
+      users[index] = updated;
+      currentUser = updated;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
   bool signupStudent({
     required String name,
     required String email,

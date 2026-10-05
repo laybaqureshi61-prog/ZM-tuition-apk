@@ -1898,6 +1898,11 @@ class _AdminDashboardState extends State<AdminDashboard>
             _showBatchArchiveDialog(context, cardColor, textColor);
           }, cardColor, textColor),
 
+          _buildMoreListTile('Change Password', Icons.lock_reset,
+              const Color(0xFFE11D48), () {
+            _showChangePasswordDialog(context, cardColor, textColor);
+          }, cardColor, textColor),
+
           _buildMoreListTile(
               'About Coaching App', Icons.info_outline, const Color(0xFF3B82F6),
               () {
@@ -1927,6 +1932,65 @@ class _AdminDashboardState extends State<AdminDashboard>
                 : const Icon(Icons.arrow_forward_ios, size: 14)),
         onTap: onTap,
       ),
+    );
+  }
+
+  void _showChangePasswordDialog(BuildContext context, Color cardColor, Color textColor) {
+    final oldPassController = TextEditingController();
+    final newPassController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: cardColor,
+          title: Text('Change Admin Password', style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 16)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: oldPassController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Current Password *', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: newPassController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'New Password *', border: OutlineInputBorder()),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
+              onPressed: () {
+                final oldP = oldPassController.text.trim();
+                final newP = newPassController.text.trim();
+                if (oldP.isEmpty || newP.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill both current and new password fields!')),
+                  );
+                  return;
+                }
+                final success = _appData.changeCurrentUserPassword(oldP, newP);
+                if (success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Password updated successfully!')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Incorrect current password!')),
+                  );
+                }
+              },
+              child: const Text('Update Password'),
+            ),
+          ],
+        );
+      },
     );
   }
 

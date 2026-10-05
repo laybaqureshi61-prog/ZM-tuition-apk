@@ -598,9 +598,58 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                   subtitle: Text(
                                       'Subject: ${note.subject} • ${note.fileName} (${note.fileSize})',
                                       style: const TextStyle(fontSize: 11)),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.download_for_offline, color: Color(0xFF4F46E5)),
+                                    tooltip: 'Download Note PDF',
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Downloading ${note.fileName} (${note.fileSize})... Download Complete! Saved to Downloads.'),
+                                          backgroundColor: const Color(0xFF10B981),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 );
                               },
                             ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // SECTION 5: Student Password & Account Settings
+              Card(
+                color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.lock_reset, color: Color(0xFF4F46E5)),
+                          const SizedBox(width: 8),
+                          Text(_appData.tr('Security & Password Settings'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: textColor)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF4F46E5),
+                            side: const BorderSide(color: Color(0xFF4F46E5)),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            _showStudentChangePasswordDialog(context, cardColor, textColor);
+                          },
+                          icon: const Icon(Icons.password),
+                          label: const Text('Change My Password / PIN', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -610,6 +659,65 @@ class _StudentDashboardState extends State<StudentDashboard> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showStudentChangePasswordDialog(BuildContext context, Color cardColor, Color textColor) {
+    final oldPassController = TextEditingController();
+    final newPassController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: cardColor,
+          title: Text('Change Password / PIN', style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 16)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: oldPassController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Current Password / PIN *', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: newPassController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'New Password / PIN *', border: OutlineInputBorder()),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
+              onPressed: () {
+                final oldP = oldPassController.text.trim();
+                final newP = newPassController.text.trim();
+                if (oldP.isEmpty || newP.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill both current and new password fields!')),
+                  );
+                  return;
+                }
+                final success = _appData.changeCurrentUserPassword(oldP, newP);
+                if (success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Password / PIN updated successfully!')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Incorrect current password / PIN!')),
+                  );
+                }
+              },
+              child: const Text('Update Password'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

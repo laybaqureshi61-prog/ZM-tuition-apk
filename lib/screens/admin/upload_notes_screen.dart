@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import '../../models.dart';
 import '../../services/app_data.dart';
 
@@ -19,18 +19,15 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
   // Common Fields
   String _selectedClass = 'Class 10th (Science & Math)';
   String _selectedSubject = 'Mathematics';
-  final _titleController = TextEditingController(text: 'Chapter Formula & Practice Notes');
+  final _titleController = TextEditingController();
 
   // Option A (Camera Multi-Page Scan) State
-  final List<Map<String, String>> _scannedPages = [
-    {'title': 'Page 1: Title & Formulas', 'time': '10:15 AM'},
-    {'title': 'Page 2: Solved Examples', 'time': '10:16 AM'},
-  ];
+  final List<Map<String, String>> _scannedPages = [];
 
   // Option B (File Picker) State
-  String? _pickedFileName = 'Class_10_Math_Formula_Sheet.pdf';
-  String? _pickedFileSize = '2.8 MB';
-  int _pickedFilePages = 12;
+  String? _pickedFileName;
+  String? _pickedFileSize;
+  int _pickedFilePages = 1;
 
   // Option C (Create in App Test/Notes) State
   final List<TextEditingController> _questionControllers = [
@@ -52,17 +49,30 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
     }
   }
 
-  // Option A: Real Device Camera Capture
-  Future<void> _captureRealCameraPhoto() async {
+  // Option A: Real Device Camera Capture / Photo Picker
+  Future<void> _captureCameraPage() async {
     try {
       final picker = ImagePicker();
-      final XFile? photo = await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+      XFile? photo;
+      try {
+        photo = await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+      } catch (_) {
+        // Fallback to gallery / file selector if camera is not available on device
+        photo = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+      }
+
       if (photo != null) {
+        final length = await photo.length();
+        final sizeMb = (length / (1024 * 1024)).toStringAsFixed(2);
         setState(() {
           _scannedPages.add({
-            'title': 'Page ${_scannedPages.length + 1}: ${photo.name}',
+            'title': 'Page ${_scannedPages.length + 1}: ${photo!.name}',
+            'size': '$sizeMb MB',
             'time': '${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
           });
+          if (_titleController.text.isEmpty) {
+            _titleController.text = 'Scanned Notes ${photo.name.replaceAll('.jpg', '').replaceAll('.png', '')}';
+          }
         });
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -73,31 +83,40 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Camera error / permission: $e')),
+          SnackBar(content: Text('Camera error: $e')),
         );
       }
     }
   }
 
-  // Option B: Real Native File / Gallery Picker
-  Future<void> _pickRealDeviceFile() async {
+  // Option B: Native OS File Open Dialog (Pops up Windows/Mac/Web/Android file browser)
+  Future<void> _pickDeviceDocument() async {
     try {
-      final picker = ImagePicker();
-      final XFile? file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+      const typeGroup = XTypeGroup(
+        label: 'Documents & Images',
+        extensions: <String>['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
+      );
+
+      final XFile? file = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
+
       if (file != null) {
         final bytes = await file.length();
-        final sizeMb = (bytes / (1024 * 1024)).toStringAsFixed(1);
+        final sizeMb = (bytes / (1024 * 1024)).toStringAsFixed(2);
+        final sizeKb = (bytes / 1024).toStringAsFixed(0);
+        final displaySize = bytes > (1024 * 1024) ? '$sizeMb MB' : '$sizeKb KB';
+
         setState(() {
           _pickedFileName = file.name;
-          _pickedFileSize = '$sizeMb MB';
-          _pickedFilePages = 10;
+          _pickedFileSize = displaySize;
+          _pickedFilePages = (bytes / 150000).ceil().clamp(1, 99);
           if (_titleController.text.isEmpty) {
-            _titleController.text = file.name.replaceAll('_', ' ');
+            _titleController.text = file.name.replaceAll('.pdf', '').replaceAll('_', ' ');
           }
         });
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('📄 Selected File: ${file.name} ($sizeMb MB)')),
+            SnackBar(content: Text('📄 Selected File: ${file.name} ($displaySize)')),
           );
         }
       }
@@ -151,20 +170,26 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                   if (_selectedUploadOption == 0) ...[
                     Text('Total Scanned Pages: ${_scannedPages.length}', style: const TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    ..._scannedPages.map((p) => Card(
-                      color: Colors.grey.shade100,
-                      child: ListTile(
-                        leading: const Icon(Icons.image, color: Color(0xFF4F46E5)),
-                        title: Text(p['title']!, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                        subtitle: Text('Captured at ${p['time']}', style: const TextStyle(fontSize: 10)),
-                      ),
-                    )),
+                    if (_scannedPages.isEmpty)
+                      const Text('No pages captured yet. Tap "Capture Page" to open camera.', style: TextStyle(color: Colors.grey, fontSize: 12))
+                    else
+                      ..._scannedPages.map((p) => Card(
+                        color: Colors.grey.shade100,
+                        child: ListTile(
+                          leading: const Icon(Icons.image, color: Color(0xFF4F46E5)),
+                          title: Text(p['title']!, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          subtitle: Text('Size: ${p['size'] ?? "1.2 MB"} • Captured at ${p['time']}', style: const TextStyle(fontSize: 10)),
+                        ),
+                      )),
                   ] else if (_selectedUploadOption == 1) ...[
-                    ListTile(
-                      leading: const Icon(Icons.insert_drive_file, color: Colors.red, size: 32),
-                      title: Text(_pickedFileName ?? 'Document.pdf', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                      subtitle: Text('Size: ${_pickedFileSize ?? "2.5 MB"} | Total Pages: $_pickedFilePages', style: const TextStyle(fontSize: 11)),
-                    ),
+                    if (_pickedFileName == null)
+                      const Text('No file selected yet. Tap the box above to open file browser.', style: TextStyle(color: Colors.grey, fontSize: 12))
+                    else
+                      ListTile(
+                        leading: const Icon(Icons.insert_drive_file, color: Colors.red, size: 32),
+                        title: Text(_pickedFileName!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        subtitle: Text('Size: $_pickedFileSize | Estimated Pages: $_pickedFilePages', style: const TextStyle(fontSize: 11)),
+                      ),
                   ] else ...[
                     const Text('Question Paper Header:', style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 6),
@@ -203,13 +228,27 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
       return;
     }
 
+    if (_selectedUploadOption == 0 && _scannedPages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please capture at least 1 page using camera!')),
+      );
+      return;
+    }
+
+    if (_selectedUploadOption == 1 && _pickedFileName == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a file from storage!')),
+      );
+      return;
+    }
+
     final admin = _appData.currentUser;
 
     if (_selectedUploadOption == 0) {
       // Option A: Multi-page Scan
       final newNote = NoteModel(
         id: 'note_${DateTime.now().millisecondsSinceEpoch}',
-        title: '${_titleController.text.trim()} (Scanned ${_scannedPages.length} Pages)',
+        title: '${_titleController.text.trim()} (${_scannedPages.length} Scanned Pages)',
         subject: _selectedSubject,
         className: _selectedClass,
         date: AppData.formatLocalDate(DateTime.now()),
@@ -237,7 +276,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
       );
       _appData.addNote(newNote);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Uploaded ${_pickedFileName ?? "document"} successfully!')),
+        SnackBar(content: Text('Uploaded ${_pickedFileName!} successfully!')),
       );
     } else {
       // Option C: Create in App
@@ -398,7 +437,11 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
 
                           TextField(
                             controller: _titleController,
-                            decoration: const InputDecoration(labelText: 'Document / Test Title *', border: OutlineInputBorder()),
+                            decoration: const InputDecoration(
+                              labelText: 'Document / Test Title *',
+                              border: OutlineInputBorder(),
+                              hintText: 'e.g. Chapter 1 Physics Formula Notes',
+                            ),
                           ),
                           const SizedBox(height: 20),
 
@@ -518,34 +561,53 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
             const Text('Option A: Multi-Page Camera Scan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF4F46E5))),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
-              onPressed: _captureRealCameraPhoto,
+              onPressed: _captureCameraPage,
               icon: const Icon(Icons.camera_alt, size: 16),
-              label: const Text('Open Camera', style: TextStyle(fontSize: 11)),
+              label: const Text('Capture Page', style: TextStyle(fontSize: 11)),
             ),
           ],
         ),
         const SizedBox(height: 10),
 
-        ...List.generate(_scannedPages.length, (index) {
-          final page = _scannedPages[index];
-          return Card(
-            color: Colors.grey.shade50,
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            child: ListTile(
-              leading: const Icon(Icons.document_scanner, color: Color(0xFF4F46E5)),
-              title: Text(page['title']!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-              subtitle: Text('Captured at ${page['time']}', style: const TextStyle(fontSize: 10)),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                onPressed: () {
-                  setState(() {
-                    _scannedPages.removeAt(index);
-                  });
-                },
-              ),
+        if (_scannedPages.isEmpty)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-          );
-        }),
+            child: const Column(
+              children: [
+                Icon(Icons.camera_alt_outlined, size: 36, color: Colors.grey),
+                SizedBox(height: 6),
+                Text('No pages scanned yet.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87)),
+                Text('Tap "Capture Page" above to open your camera/device file browser.', style: TextStyle(fontSize: 11, color: Colors.grey)),
+              ],
+            ),
+          )
+        else
+          ...List.generate(_scannedPages.length, (index) {
+            final page = _scannedPages[index];
+            return Card(
+              color: Colors.grey.shade50,
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                leading: const Icon(Icons.document_scanner, color: Color(0xFF4F46E5)),
+                title: Text(page['title']!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                subtitle: Text('Size: ${page['size'] ?? "1.2 MB"} • Captured at ${page['time']}', style: const TextStyle(fontSize: 10)),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                  onPressed: () {
+                    setState(() {
+                      _scannedPages.removeAt(index);
+                    });
+                  },
+                ),
+              ),
+            );
+          }),
       ],
     );
   }
@@ -559,7 +621,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
         const SizedBox(height: 10),
 
         InkWell(
-          onTap: _pickRealDeviceFile,
+          onTap: _pickDeviceDocument,
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
@@ -573,13 +635,15 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                 const Icon(Icons.cloud_upload_outlined, size: 46, color: Color(0xFF4F46E5)),
                 const SizedBox(height: 8),
                 Text(
-                  _pickedFileName ?? 'Click to select PDF/JPG/PNG file from storage',
+                  _pickedFileName ?? 'Click here to open OS File Picker (Select PDF/JPG/PNG)',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF4F46E5)),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _pickedFileSize != null ? 'File Size: $_pickedFileSize • $_pickedFilePages Pages' : '(Supported formats: PDF, DOCX, JPG, PNG)',
+                  _pickedFileSize != null ? 'Selected File Size: $_pickedFileSize • $_pickedFilePages Pages' : '(Clicking opens your laptop/phone file open dialog)',
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

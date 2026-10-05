@@ -17,25 +17,27 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
   // Common Fields
   String _selectedClass = 'Class 10th (Science & Math)';
   String _selectedSubject = 'Mathematics';
-  final _titleController = TextEditingController();
+  final _titleController = TextEditingController(text: 'Chapter Formula & Practice Notes');
 
   // Option A (Camera Multi-Page Scan) State
-  final List<String> _scannedPages = [
-    'Page 1: Title & Formulas',
-    'Page 2: Solved Example 1 & 2',
+  final List<Map<String, String>> _scannedPages = [
+    {'title': 'Page 1: Title & Formulas', 'time': '10:15 AM'},
+    {'title': 'Page 2: Solved Examples', 'time': '10:16 AM'},
   ];
 
   // Option B (File Picker) State
-  String? _pickedFileName;
-  String? _pickedFileSize;
+  String? _pickedFileName = 'Class_10_Math_Formula_Sheet.pdf';
+  String? _pickedFileSize = '2.8 MB';
+  int _pickedFilePages = 12;
 
   // Option C (Create in App Test/Notes) State
   final List<TextEditingController> _questionControllers = [
-    TextEditingController(text: 'What is the SI unit of Force?'),
-    TextEditingController(text: 'Define Newton\'s Second Law of Motion.'),
+    TextEditingController(text: 'What is the SI unit of Magnetic Field Strength?'),
+    TextEditingController(text: 'State Ohm\'s Law and write its mathematical formula.'),
+    TextEditingController(text: 'Explain the working principle of an Electric Motor.'),
   ];
   final _marksController = TextEditingController(text: '25');
-  final _durationController = TextEditingController(text: '15');
+  final _durationController = TextEditingController(text: '20');
 
   final List<String> subjects = ['Mathematics', 'Science', 'Physics', 'Chemistry', 'Accountancy', 'Economics', 'English'];
 
@@ -48,31 +50,260 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
     }
   }
 
-  void _addScannedPage() {
-    setState(() {
-      _scannedPages.add('Page ${_scannedPages.length + 1}: Captured Notes Image');
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('📸 Captured Page ${_scannedPages.length} successfully!')),
+  // Option A: Open Simulated Live Camera Modal
+  void _openCameraScannerModal() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.black,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.80,
+              child: Column(
+                children: [
+                  AppBar(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    title: const Text('Camera Scanner Viewfinder', style: TextStyle(fontSize: 16)),
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.flash_on, color: Colors.amber),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade900,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF4F46E5), width: 2),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.document_scanner, size: 72, color: Color(0xFF4F46E5)),
+                              SizedBox(height: 12),
+                              Text('Align Document Inside Grid', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                              Text('Auto-Edge Detection Enabled', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                            ],
+                          ),
+                          Positioned(
+                            bottom: 20,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'Pages Captured: ${_scannedPages.length}',
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          label: const Text('Done', style: TextStyle(color: Colors.white)),
+                        ),
+                        // Shutter Button
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _scannedPages.add({
+                                'title': 'Page ${_scannedPages.length + 1}: Captured Document Photo',
+                                'time': '${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}',
+                              });
+                            });
+                            setModalState(() {});
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('📸 Captured Page ${_scannedPages.length} successfully!')),
+                            );
+                          },
+                          child: Container(
+                            height: 70,
+                            width: 70,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              border: Border.all(color: const Color(0xFF4F46E5), width: 4),
+                            ),
+                            child: const Icon(Icons.camera, color: Color(0xFF4F46E5), size: 36),
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            _previewScannedPdf();
+                          },
+                          icon: const Icon(Icons.picture_as_pdf, color: Color(0xFF22C55E)),
+                          label: const Text('Preview PDF', style: TextStyle(color: Color(0xFF22C55E))),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
-  void _removeScannedPage(int index) {
-    setState(() {
-      _scannedPages.removeAt(index);
-    });
+  // Option B: Open Storage File Picker Modal
+  void _openFilePickerModal() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        final sampleFiles = [
+          {'name': 'Class_10_Math_Formula_Sheet.pdf', 'size': '2.8 MB', 'pages': 12},
+          {'name': 'Science_Physics_Magnetism_Notes.pdf', 'size': '4.2 MB', 'pages': 18},
+          {'name': 'Commerce_Accountancy_TrialBalance.pdf', 'size': '1.9 MB', 'pages': 8},
+          {'name': 'English_Grammar_Complete_Guide.pdf', 'size': '3.1 MB', 'pages': 15},
+        ];
+
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Select PDF File from Device', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                ],
+              ),
+              const Divider(),
+              ...sampleFiles.map((f) => ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(8)),
+                  child: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                ),
+                title: Text(f['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                subtitle: Text('Size: ${f['size']} • ${f['pages']} Pages', style: const TextStyle(fontSize: 11)),
+                onTap: () {
+                  setState(() {
+                    _pickedFileName = f['name'] as String;
+                    _pickedFileSize = f['size'] as String;
+                    _pickedFilePages = f['pages'] as int;
+                    if (_titleController.text.isEmpty) {
+                      _titleController.text = _pickedFileName!.replaceAll('.pdf', '').replaceAll('_', ' ');
+                    }
+                  });
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('📄 Selected file: ${_pickedFileName!}')),
+                  );
+                },
+              )),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  void _simulateFilePicker() {
-    setState(() {
-      _pickedFileName = 'Chapter_Physics_Lecture.pdf';
-      _pickedFileSize = '3.8 MB';
-      if (_titleController.text.isEmpty) {
-        _titleController.text = 'Physics Chapter Notes';
-      }
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('📄 Selected file: Chapter_Physics_Lecture.pdf (3.8 MB)')),
+  // Preview PDF Document Modal
+  void _previewScannedPdf() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              const Icon(Icons.picture_as_pdf, color: Colors.red),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(_titleController.text.isNotEmpty ? _titleController.text : 'PDF Document Preview', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4F46E5).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('ZM Tuition – Old Bus Stand, Nakur', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF4F46E5), fontSize: 13)),
+                        Text('Target Batch: $_selectedClass | Subject: $_selectedSubject', style: const TextStyle(fontSize: 11)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (_selectedUploadOption == 0) ...[
+                    Text('Total Scanned Pages: ${_scannedPages.length}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    ..._scannedPages.map((p) => Card(
+                      color: Colors.grey.shade100,
+                      child: ListTile(
+                        leading: const Icon(Icons.image, color: Color(0xFF4F46E5)),
+                        title: Text(p['title']!, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        subtitle: Text('Captured at ${p['time']}', style: const TextStyle(fontSize: 10)),
+                      ),
+                    )),
+                  ] else if (_selectedUploadOption == 1) ...[
+                    ListTile(
+                      leading: const Icon(Icons.insert_drive_file, color: Colors.red, size: 32),
+                      title: Text(_pickedFileName ?? 'Document.pdf', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      subtitle: Text('Size: ${_pickedFileSize ?? "2.5 MB"} | Total Pages: $_pickedFilePages', style: const TextStyle(fontSize: 11)),
+                    ),
+                  ] else ...[
+                    const Text('Question Paper Header:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Text('Time Duration: ${_durationController.text} Mins | Max Marks: ${_marksController.text}', style: const TextStyle(fontSize: 12)),
+                    const Divider(),
+                    ...List.generate(_questionControllers.length, (i) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text('Q${i + 1}. ${_questionControllers[i].text}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                      );
+                    }),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+          ],
+        );
+      },
     );
   }
 
@@ -191,20 +422,40 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Institute Watermark Header
+                  // Institute Watermark Header Banner
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4F46E5).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF4F46E5), Color(0xFF6366F1)],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF4F46E5).withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: const Row(
                       children: [
-                        Icon(Icons.school, color: Color(0xFF4F46E5)),
-                        SizedBox(width: 8),
-                        Text(
-                          AppData.instituteName,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF4F46E5)),
+                        Icon(Icons.school, color: Colors.white, size: 28),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppData.instituteName,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+                              ),
+                              Text(
+                                'Section 15: Document & Test Paper Publishing Hub',
+                                style: TextStyle(fontSize: 11, color: Colors.white70),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -235,6 +486,8 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                   // Main Form Card
                   Card(
                     color: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 3,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -242,7 +495,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                         children: [
                           // Class & Subject Dropdowns
                           DropdownButtonFormField<String>(
-                            initialValue: _selectedClass,
+                            value: _selectedClass,
                             decoration: const InputDecoration(labelText: 'Target Batch / Class', border: OutlineInputBorder()),
                             items: allowedClasses.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                             onChanged: (val) {
@@ -252,7 +505,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                           const SizedBox(height: 14),
 
                           DropdownButtonFormField<String>(
-                            initialValue: _selectedSubject,
+                            value: _selectedSubject,
                             decoration: const InputDecoration(labelText: 'Subject', border: OutlineInputBorder()),
                             items: subjects.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                             onChanged: (val) {
@@ -274,22 +527,34 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
 
                           const SizedBox(height: 24),
 
-                          SizedBox(
-                            width: double.infinity,
-                            height: 48,
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4F46E5),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: _previewScannedPdf,
+                                  icon: const Icon(Icons.visibility),
+                                  label: const Text('Preview PDF'),
+                                ),
                               ),
-                              onPressed: _saveUpload,
-                              icon: const Icon(Icons.cloud_upload),
-                              label: Text(
-                                _selectedUploadOption == 2 ? 'Publish Test / Notes' : 'Upload Study Document',
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                flex: 2,
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF4F46E5),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                  onPressed: _saveUpload,
+                                  icon: const Icon(Icons.cloud_upload),
+                                  label: Text(
+                                    _selectedUploadOption == 2 ? 'Publish Test' : 'Upload PDF',
+                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
@@ -319,6 +584,10 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                     title: Text(note.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                     subtitle: Text('Subject: ${note.subject} | Class: ${note.className}\nFile: ${note.fileName} (${note.fileSize})', style: const TextStyle(fontSize: 11, color: Colors.black54)),
                     isThreeLine: true,
+                    trailing: IconButton(
+                      icon: const Icon(Icons.visibility, color: Color(0xFF4F46E5)),
+                      onPressed: _previewScannedPdf,
+                    ),
                   ),
                 );
               },
@@ -335,12 +604,14 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
     return InkWell(
       onTap: () => setState(() => _selectedUploadOption = optionIndex),
       borderRadius: BorderRadius.circular(12),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF4F46E5) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: isSelected ? const Color(0xFF4F46E5) : Colors.grey.shade300),
+          boxShadow: isSelected ? [BoxShadow(color: const Color(0xFF4F46E5).withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 3))] : null,
         ),
         child: Column(
           children: [
@@ -365,43 +636,34 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
             const Text('Option A: Multi-Page Camera Scan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF4F46E5))),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
-              onPressed: _addScannedPage,
-              icon: const Icon(Icons.add_a_photo, size: 16),
-              label: const Text('Capture Page', style: TextStyle(fontSize: 11)),
+              onPressed: _openCameraScannerModal,
+              icon: const Icon(Icons.camera_alt, size: 16),
+              label: const Text('Launch Camera', style: TextStyle(fontSize: 11)),
             ),
           ],
         ),
         const SizedBox(height: 10),
 
-        // Reorderable Pages Preview Grid
-        ReorderableListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _scannedPages.length,
-          onReorder: (oldIndex, newIndex) {
-            setState(() {
-              if (newIndex > oldIndex) newIndex -= 1;
-              final item = _scannedPages.removeAt(oldIndex);
-              _scannedPages.insert(newIndex, item);
-            });
-          },
-          itemBuilder: (context, index) {
-            return Card(
-              key: ValueKey(_scannedPages[index]),
-              color: Colors.grey.shade50,
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              child: ListTile(
-                leading: const Icon(Icons.document_scanner, color: Color(0xFF4F46E5)),
-                title: Text(_scannedPages[index], style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                subtitle: const Text('Drag to reorder page sequence', style: TextStyle(fontSize: 10)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                  onPressed: () => _removeScannedPage(index),
-                ),
+        ...List.generate(_scannedPages.length, (index) {
+          final page = _scannedPages[index];
+          return Card(
+            color: Colors.grey.shade50,
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            child: ListTile(
+              leading: const Icon(Icons.document_scanner, color: Color(0xFF4F46E5)),
+              title: Text(page['title']!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              subtitle: Text('Captured at ${page['time']}', style: const TextStyle(fontSize: 10)),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                onPressed: () {
+                  setState(() {
+                    _scannedPages.removeAt(index);
+                  });
+                },
               ),
-            );
-          },
-        ),
+            ),
+          );
+        }),
       ],
     );
   }
@@ -415,14 +677,14 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
         const SizedBox(height: 10),
 
         InkWell(
-          onTap: _simulateFilePicker,
+          onTap: _openFilePickerModal,
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: const Color(0xFF4F46E5).withValues(alpha: 0.05),
+              color: const Color(0xFF4F46E5).withOpacity(0.05),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF4F46E5).withValues(alpha: 0.4), style: BorderStyle.solid, width: 1.5),
+              border: Border.all(color: const Color(0xFF4F46E5).withOpacity(0.4), style: BorderStyle.solid, width: 1.5),
             ),
             child: Column(
               children: [
@@ -434,7 +696,7 @@ class _UploadNotesScreenState extends State<UploadNotesScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _pickedFileSize != null ? 'File Size: $_pickedFileSize' : '(Supported formats: PDF, DOCX, JPG, PNG)',
+                  _pickedFileSize != null ? 'File Size: $_pickedFileSize • $_pickedFilePages Pages' : '(Supported formats: PDF, DOCX, JPG, PNG)',
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
                 ),
               ],

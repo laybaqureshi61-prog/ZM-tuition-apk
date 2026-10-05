@@ -129,7 +129,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Banner Card
+              // Header Banner Card with Dynamic Greeting
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -138,7 +138,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(color: const Color(0xFF4F46E5).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 6)),
                   ],
@@ -156,7 +156,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hello, ${student?.name ?? "Student"} 👋',
+                            '${DateTime.now().hour < 12 ? "Good Morning 👋" : DateTime.now().hour < 17 ? "Good Afternoon 👋" : "Good Evening 👋"}, ${student?.name ?? "Student"}',
                             style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 2),
@@ -164,9 +164,9 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             '${student?.assignedClass ?? "Class 10th"} • Roll No: ${student?.rollNo ?? "01"}',
                             style: const TextStyle(color: Colors.white70, fontSize: 12),
                           ),
-                          Text(
-                            'Phone: ${student?.phone} | PIN: ${student?.studentPin}',
-                            style: const TextStyle(color: Colors.white60, fontSize: 11),
+                          const Text(
+                            AppData.instituteName,
+                            style: TextStyle(color: Colors.white60, fontSize: 11),
                           ),
                         ],
                       ),

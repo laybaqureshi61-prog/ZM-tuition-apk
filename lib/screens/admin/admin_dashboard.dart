@@ -231,7 +231,7 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Banner Card
+          // Banner Card with Dynamic Greeting
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -240,7 +240,7 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(color: const Color(0xFF4F46E5).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 6)),
               ],
@@ -258,7 +258,7 @@ class _AdminDashboardState extends State<AdminDashboard> with SingleTickerProvid
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Welcome, ${admin?.name ?? "Admin"} 👋',
+                        '${DateTime.now().hour < 12 ? "Good Morning 👋" : DateTime.now().hour < 17 ? "Good Afternoon 👋" : "Good Evening 👋"}, ${admin?.name ?? "Admin"}',
                         style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 2),

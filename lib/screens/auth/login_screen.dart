@@ -16,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
+  final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
   late String _selectedRole;
   final AppData _appData = AppData();
@@ -30,26 +30,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _setCredentialsForRole(String role) {
     if (role == 'admin') {
-      _emailController.text = 'zm@124'; // Zoya (Admin 1) or muskan@zm.com for Muskan
+      _identifierController.text = 'zm@124';
       _passwordController.text = '12345678';
     } else {
-      _emailController.text = 'student@123';
-      _passwordController.text = '123456789';
+      _identifierController.text = 'SU/01'; // Default Roll No / Phone or Email
+      _passwordController.text = '1234'; // Default PIN / Password
     }
   }
 
   void _executeLogin() {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+    final identifier = _identifierController.text.trim();
+    final secret = _passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
+    if (identifier.isEmpty || secret.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter email and password')),
+        const SnackBar(content: Text('Please enter login ID/Roll/Phone and Password/PIN')),
       );
       return;
     }
 
-    final success = _appData.login(email, password, _selectedRole);
+    final success = _appData.login(identifier, secret, _selectedRole);
     if (success) {
       final user = _appData.currentUser;
       if (user?.role == 'admin') {
@@ -72,7 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid credentials or role selected')),
+        SnackBar(
+          content: Text(_selectedRole == 'student'
+              ? 'Invalid Roll No, Phone, or PIN. Please try again.'
+              : 'Invalid admin credentials or role selected.'),
+        ),
       );
     }
   }
@@ -84,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: Text(isAdmin ? 'Admin Login (Zoya & Muskan)' : 'Student Login'),
+        title: Text(isAdmin ? 'Admin Portal Login' : 'Student Portal Login'),
         backgroundColor: const Color(0xFF4F46E5),
       ),
       body: Center(
@@ -113,17 +117,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: const Color(0xFF4F46E5),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      isAdmin ? 'Admin Portal Login' : 'Student Login',
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                    const SizedBox(height: 12),
+                    const Text(
+                      AppData.instituteName,
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF4F46E5)),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      isAdmin ? 'Zoya (Admin 1) or Muskan (Admin 2)' : 'Enter your registered student credentials',
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      isAdmin ? 'Admin Portal Login' : 'Student Portal Login',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 4),
+                    Text(
+                      isAdmin
+                          ? 'Zoya (Admin 1) or Muskan (Admin 2)'
+                          : 'Login with Roll No, Phone, or Email + PIN/Password',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
 
                     // Role Segmented Toggle
                     SegmentedButton<String>(
@@ -149,7 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Admin Quick Switcher hint
                     if (isAdmin)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 12.0),
@@ -159,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             OutlinedButton(
                               onPressed: () {
                                 setState(() {
-                                  _emailController.text = 'zm@124';
+                                  _identifierController.text = 'zm@124';
                                   _passwordController.text = '12345678';
                                 });
                               },
@@ -168,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             OutlinedButton(
                               onPressed: () {
                                 setState(() {
-                                  _emailController.text = 'muskan@zm.com';
+                                  _identifierController.text = 'muskan@zm.com';
                                   _passwordController.text = '12345678';
                                 });
                               },
@@ -179,12 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                     TextField(
-                      controller: _emailController,
+                      controller: _identifierController,
                       style: const TextStyle(color: Colors.black87),
                       decoration: InputDecoration(
-                        labelText: 'Email / User ID',
+                        labelText: isAdmin ? 'Email / User ID' : 'Roll No / Phone / Email *',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                        prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF4F46E5)),
+                        prefixIcon: Icon(isAdmin ? Icons.email_outlined : Icons.badge_outlined, color: const Color(0xFF4F46E5)),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -194,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       style: const TextStyle(color: Colors.black87),
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: isAdmin ? 'Password *' : 'Student PIN / Password *',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF4F46E5)),
                       ),

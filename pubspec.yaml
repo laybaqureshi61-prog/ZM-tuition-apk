@@ -1,7 +1,7 @@
 name: zm
 description: Complete Working DEGI Campus Portal System - zm Tuition
 publish_to: 'cross platform '
-version: 1.0.62+62
+version: 2.0.0+20000
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

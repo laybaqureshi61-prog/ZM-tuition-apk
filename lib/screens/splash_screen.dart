@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../services/app_data.dart';
 import 'auth/role_selection_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -26,19 +27,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF4F46E5), // PRD Indigo/Violet Logo Background
+      backgroundColor: const Color(0xFF4F46E5), // Indigo
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            // Logo Badge
+            // Monogram Badge
             Center(
               child: Container(
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.2),
@@ -52,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     Text(
                       'ZM',
                       style: TextStyle(
-                        fontSize: 48,
+                        fontSize: 52,
                         fontWeight: FontWeight.w900,
                         color: Color(0xFF4F46E5),
                         letterSpacing: 2.0,
@@ -60,11 +61,12 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Tuition Management',
+                      'TUITION PORTAL',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
+                        letterSpacing: 1.5,
                       ),
                     ),
                   ],
@@ -72,15 +74,18 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 24),
+
+            // Institute Name Header
             const Text(
-              'ZM Tuition Management App',
+              AppData.instituteName,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             const Text(
               'Learn  •  Attend  •  Pay  •  Grow',
               style: TextStyle(
@@ -91,9 +96,9 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const Spacer(),
 
-            // Footer
+            // Footer Text
             Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: const EdgeInsets.only(bottom: 24.0),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
@@ -101,11 +106,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
-                  'Your Success • Our Priority',
+                  AppData.appVersion,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),

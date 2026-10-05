@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-
 import '../../models.dart';
 import '../../services/app_data.dart';
 import '../auth/login_screen.dart';
 import '../common/notifications_screen.dart';
 import '../common/pdf_document_viewer.dart';
+import '../common/classroom_hub_screen.dart';
 import 'live_test_screen.dart';
 
 class StudentDashboard extends StatefulWidget {
@@ -16,6 +16,7 @@ class StudentDashboard extends StatefulWidget {
 
 class _StudentDashboardState extends State<StudentDashboard> {
   final AppData _appData = AppData();
+  int _selectedNavTab = 0; // 0: Overview, 1: Attendance, 2: Notes/E-Books, 3: Fees, 4: Security
   String _notesSearchQuery = '';
 
   int _selectedMonth = DateTime.now().month;
@@ -42,17 +43,15 @@ class _StudentDashboardState extends State<StudentDashboard> {
     final student = _appData.currentUser;
     final isDark = _appData.isDarkMode;
 
-    final bgColor = isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC);
+    final bgColor = isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9);
     final cardColor = isDark ? const Color(0xFF1E293B) : Colors.white;
     final textColor = isDark ? Colors.white : const Color(0xFF1E293B);
 
     // Filtered Notes
     final studentNotes = _appData.notes.where((n) {
-      if (n.className != student?.assignedClass && n.className != 'All')
-        return false;
+      if (n.className != student?.assignedClass && n.className != 'All') return false;
       final q = _notesSearchQuery.toLowerCase();
-      return n.title.toLowerCase().contains(q) ||
-          n.subject.toLowerCase().contains(q);
+      return n.title.toLowerCase().contains(q) || n.subject.toLowerCase().contains(q);
     }).toList();
 
     // Attendance Calculations for Selected Month
@@ -64,19 +63,17 @@ class _StudentDashboardState extends State<StudentDashboard> {
     int holidayDays = 0;
 
     for (int day = 1; day <= daysInMonth; day++) {
-      final dateStr =
-          '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+      final dateStr = '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
       final rec = _appData.attendanceRecords.firstWhere(
-        (r) =>
-            r.studentId == student?.id &&
-            AppData.formatLocalDate(r.date) == dateStr,
+        (r) => r.studentId == student?.id && AppData.formatLocalDate(r.date) == dateStr,
         orElse: () => AttendanceRecord(
-            studentId: '',
-            studentName: '',
-            className: '',
-            date: DateTime.now(),
-            status: '',
-            markedBy: ''),
+          studentId: '',
+          studentName: '',
+          className: '',
+          date: DateTime.now(),
+          status: '',
+          markedBy: '',
+        ),
       );
 
       if (rec.status == 'Present') presentDays++;
@@ -87,668 +84,727 @@ class _StudentDashboardState extends State<StudentDashboard> {
     }
 
     final totalTracked = presentDays + absentDays + leaveDays + lateDays;
-    final attendancePercent = totalTracked > 0
-        ? ((presentDays + (lateDays * 0.5)) / totalTracked * 100)
-        : 85.0;
-    final isLowAttendance = attendancePercent < 75.0;
+    final attendancePercent = totalTracked > 0 ? ((presentDays + (lateDays * 0.5)) / totalTracked * 100) : 92.0;
 
     // Fees Ledger for Student
-    final studentFees =
-        _appData.fees.where((f) => f.studentId == student?.id).toList();
-
-    // Test Series & Results
-    final studentTests = _appData.testSeriesList
-        .where((t) =>
-            t.className == student?.assignedClass || t.className == 'All')
-        .toList();
-    final studentResults =
-        _appData.testResults.where((r) => r.studentId == student?.id).toList();
+    final studentFees = _appData.fees.where((f) => f.studentId == student?.id).toList();
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor:
-            isDark ? const Color(0xFF1E293B) : const Color(0xFF4F46E5),
+        backgroundColor: const Color(0xFF4F46E5), // Indigo Header
         elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            Text(_appData.tr('Student Portal'),
-                style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-            Text('${student?.name ?? "Student"} • ${AppData.instituteName}',
-                style: const TextStyle(fontSize: 11, color: Colors.white70)),
+            const CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.school, color: Color(0xFF4F46E5), size: 20),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${student?.name ?? "Student Portal"}',
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                Text(
+                  '${student?.assignedClass ?? "Class 10th"} • ${AppData.instituteName}',
+                  style: const TextStyle(fontSize: 10, color: Colors.white70),
+                ),
+              ],
+            ),
           ],
         ),
         actions: [
           IconButton(
-            icon: Icon(_appData.isHindi ? Icons.language : Icons.translate,
-                color: Colors.white),
-            tooltip: 'Language Toggle',
+            icon: Icon(_appData.isHindi ? Icons.language : Icons.translate, color: Colors.white),
             onPressed: () => _appData.toggleLanguage(),
           ),
           IconButton(
             icon: Badge(
               label: Text('${_appData.notifications.length}'),
-              child:
-                  const Icon(Icons.notifications_outlined, color: Colors.white),
+              child: const Icon(Icons.notifications_outlined, color: Colors.white),
             ),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const NotificationsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
             },
           ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
               _appData.logout();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
             },
           ),
         ],
       ),
+
+      // Drawer Sidebar Navigation matching Edu-Care / Eduhouse Layout (Photo 3 & 4)
+      drawer: Drawer(
+        child: Column(
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(color: Color(0xFF4F46E5)),
+              currentAccountPicture: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: Color(0xFF4F46E5), size: 36),
+              ),
+              accountName: Text(student?.name ?? 'Student Name', style: const TextStyle(fontWeight: FontWeight.bold)),
+              accountEmail: Text('${student?.assignedClass} • Roll No: ${student?.rollNo}'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.dashboard, color: Color(0xFF4F46E5)),
+              title: const Text('Dashboard Overview', style: TextStyle(fontWeight: FontWeight.bold)),
+              selected: _selectedNavTab == 0,
+              onTap: () {
+                setState(() => _selectedNavTab = 0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today, color: Color(0xFF10B981)),
+              title: const Text('Day-by-Day Attendance', style: TextStyle(fontWeight: FontWeight.bold)),
+              selected: _selectedNavTab == 1,
+              onTap: () {
+                setState(() => _selectedNavTab = 1);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.import_contacts, color: Color(0xFFF59E0B)),
+              title: const Text('Study Notes & E-Books', style: TextStyle(fontWeight: FontWeight.bold)),
+              selected: _selectedNavTab == 2,
+              onTap: () {
+                setState(() => _selectedNavTab = 2);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.menu_book, color: Color(0xFFE11D48)),
+              title: const Text('SUG Classroom Portal', style: TextStyle(fontWeight: FontWeight.bold)),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassroomHubScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_balance_wallet, color: Color(0xFF8B5CF6)),
+              title: const Text('Fees & Receipts', style: TextStyle(fontWeight: FontWeight.bold)),
+              selected: _selectedNavTab == 3,
+              onTap: () {
+                setState(() => _selectedNavTab = 3);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.lock_reset, color: Color(0xFFEC4899)),
+              title: const Text('Security & Password', style: TextStyle(fontWeight: FontWeight.bold)),
+              selected: _selectedNavTab == 4,
+              onTap: () {
+                setState(() => _selectedNavTab = 4);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Banner Card with Dynamic Greeting
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF4F46E5),
-                      Color(0xFF6366F1),
-                      Color(0xFF8B5CF6)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                        color: const Color(0xFF4F46E5).withValues(alpha: 0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6)),
-                  ],
-                ),
+        child: Column(
+          children: [
+            // Top Navigation Segment Pills
+            Container(
+              color: cardColor,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 28,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person,
-                          color: Color(0xFF4F46E5), size: 36),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${DateTime.now().hour < 12 ? "Good Morning 👋" : DateTime.now().hour < 17 ? "Good Afternoon 👋" : "Good Evening 👋"}, ${student?.name ?? "Student"}',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${student?.assignedClass ?? "Class 10th"} • Roll No: ${student?.rollNo ?? "01"}',
-                            style: const TextStyle(
-                                color: Colors.white70, fontSize: 12),
-                          ),
-                          const Text(
-                            AppData.instituteName,
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildNavPill(0, 'Dashboard', Icons.dashboard),
+                    _buildNavPill(1, 'Attendance Calendar', Icons.calendar_month),
+                    _buildNavPill(2, 'Notes & E-Books', Icons.menu_book),
+                    _buildNavPill(3, 'Fees Ledger', Icons.receipt_long),
+                    _buildNavPill(4, 'Password', Icons.lock),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+            ),
 
-              // SECTION 1: Monthly Attendance Grid Calendar
-              Card(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(_appData.tr('Attendance Monthly Grid'),
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor)),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_back_ios, size: 14),
-                                onPressed: () {
-                                  setState(() {
-                                    if (_selectedMonth == 1) {
-                                      _selectedMonth = 12;
-                                      _selectedYear--;
-                                    } else {
-                                      _selectedMonth--;
-                                    }
-                                  });
-                                },
-                              ),
-                              Text('$_selectedMonth/$_selectedYear',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12)),
-                              IconButton(
-                                icon: const Icon(Icons.arrow_forward_ios,
-                                    size: 14),
-                                onPressed: () {
-                                  setState(() {
-                                    if (_selectedMonth == 12) {
-                                      _selectedMonth = 1;
-                                      _selectedYear++;
-                                    } else {
-                                      _selectedMonth++;
-                                    }
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Attendance Summary Strip with Red Alert Badge if < 75%
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: isLowAttendance
-                              ? Colors.red.shade50
-                              : const Color(0xFF4F46E5).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: isLowAttendance
-                                  ? Colors.red
-                                  : const Color(0xFF4F46E5)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                const Text('Monthly Rate',
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.grey)),
-                                Text(
-                                  '${attendancePercent.toStringAsFixed(0)}%',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: isLowAttendance
-                                          ? Colors.red
-                                          : const Color(0xFF4F46E5)),
-                                ),
-                              ],
-                            ),
-                            if (isLowAttendance)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: const Text('LOW ATTENDANCE < 75%',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            Text(
-                                'P: $presentDays | A: $absentDays | L: $leaveDays | LT: $lateDays',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 11)),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Calendar Day Cells Grid
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 7,
-                          crossAxisSpacing: 4,
-                          mainAxisSpacing: 4,
-                        ),
-                        itemCount: daysInMonth,
-                        itemBuilder: (context, index) {
-                          final day = index + 1;
-                          final dateStr =
-                              '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
-                          final rec = _appData.attendanceRecords.firstWhere(
-                            (r) =>
-                                r.studentId == student?.id &&
-                                AppData.formatLocalDate(r.date) == dateStr,
-                            orElse: () => AttendanceRecord(
-                                studentId: '',
-                                studentName: '',
-                                className: '',
-                                date: DateTime.now(),
-                                status: 'Off',
-                                markedBy: ''),
-                          );
-
-                          Color cellBg = Colors.grey.shade200;
-                          Color cellText = Colors.black87;
-
-                          if (rec.status == 'Present') {
-                            cellBg = Colors.green;
-                            cellText = Colors.white;
-                          } else if (rec.status == 'Absent') {
-                            cellBg = Colors.red;
-                            cellText = Colors.white;
-                          } else if (rec.status == 'Leave') {
-                            cellBg = Colors.blue;
-                            cellText = Colors.white;
-                          } else if (rec.status == 'Late') {
-                            cellBg = Colors.orange;
-                            cellText = Colors.white;
-                          } else if (rec.status == 'Holiday') {
-                            cellBg = Colors.grey.shade400;
-                            cellText = Colors.white;
-                          }
-
-                          return Container(
-                            decoration: BoxDecoration(
-                                color: cellBg,
-                                borderRadius: BorderRadius.circular(6)),
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('$day',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: cellText)),
-                                if (rec.status != 'Off')
-                                  Text(rec.status.substring(0, 1),
-                                      style: TextStyle(
-                                          fontSize: 8,
-                                          color: cellText,
-                                          fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+            // Main Dashboard Body Based on Selected Tab
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_selectedNavTab == 0) _buildOverviewTab(student, attendancePercent, presentDays, absentDays, leaveDays, studentNotes, studentFees, cardColor, textColor),
+                    if (_selectedNavTab == 1) _buildAttendanceCalendarTab(student, daysInMonth, presentDays, absentDays, leaveDays, lateDays, attendancePercent, cardColor, textColor),
+                    if (_selectedNavTab == 2) _buildStudyNotesCardsTab(studentNotes, cardColor, textColor),
+                    if (_selectedNavTab == 3) _buildFeesLedgerTab(studentFees, cardColor, textColor),
+                    if (_selectedNavTab == 4) _buildSecuritySettingsTab(cardColor, textColor),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-
-              // SECTION 2: Fee Status & Receipts
-              Card(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(_appData.tr('Fee Ledger & Receipts'),
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: textColor)),
-                      const SizedBox(height: 10),
-                      studentFees.isEmpty
-                          ? const Text('No fee records found',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: studentFees.length,
-                              itemBuilder: (context, idx) {
-                                final fee = studentFees[idx];
-                                return ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text(fee.month,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: textColor)),
-                                  subtitle: Text(
-                                    'Paid: ₹${fee.paidAmount.toStringAsFixed(0)} / ₹${fee.amount.toStringAsFixed(0)}\n'
-                                    'Receipt No: ${fee.receiptNo.isNotEmpty ? fee.receiptNo : "Pending"} • Mode: ${fee.paymentMode}',
-                                    style: const TextStyle(fontSize: 11),
-                                  ),
-                                  isThreeLine: true,
-                                  trailing: Chip(
-                                    label: Text(fee.isPaid
-                                        ? 'PAID'
-                                        : (fee.isPartial
-                                            ? 'PARTIAL'
-                                            : 'PENDING')),
-                                    backgroundColor: fee.isPaid
-                                        ? Colors.green.shade50
-                                        : (fee.isPartial
-                                            ? Colors.orange.shade50
-                                            : Colors.red.shade50),
-                                    side: BorderSide.none,
-                                    labelStyle: TextStyle(
-                                      color: fee.isPaid
-                                          ? Colors.green
-                                          : (fee.isPartial
-                                              ? Colors.orange
-                                              : Colors.red),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // SECTION 3: Performance & Live Tests
-              Card(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(_appData.tr('Live Tests & Marks'),
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor)),
-                          const Icon(Icons.show_chart,
-                              color: Color(0xFF4F46E5)),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Trend Line Graphic
-                      SizedBox(
-                        height: 80,
-                        child: CustomPaint(
-                          size: Size.infinite,
-                          painter: StudentTrendPainter(),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      studentTests.isEmpty
-                          ? const Text('No active test series',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: studentTests.length,
-                              itemBuilder: (context, idx) {
-                                final test = studentTests[idx];
-                                return ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text(test.title,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: textColor)),
-                                  subtitle: Text(
-                                      'Duration: ${test.durationMinutes} mins • Marks: ${test.totalMarks}'),
-                                  trailing: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color(0xFF4F46E5),
-                                        foregroundColor: Colors.white),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => LiveTestScreen(
-                                                  testSeries: test)));
-                                    },
-                                    child: const Text('Start Test',
-                                        style: TextStyle(fontSize: 11)),
-                                  ),
-                                );
-                              },
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // SECTION 4: Notes & Homework List
-              Card(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(_appData.tr('Study Notes & Materials'),
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: textColor)),
-                      const SizedBox(height: 10),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: _appData.tr('Search Student'),
-                          prefixIcon: const Icon(Icons.search, size: 18),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
-                        ),
-                        onChanged: (val) =>
-                            setState(() => _notesSearchQuery = val),
-                      ),
-                      const SizedBox(height: 10),
-                      studentNotes.isEmpty
-                          ? const Text('No study notes available',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: studentNotes.length,
-                              itemBuilder: (context, idx) {
-                                final note = studentNotes[idx];
-                                return ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
-                                  title: Text(note.title,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: textColor)),
-                                  subtitle: Text(
-                                      'Subject: ${note.subject} • ${note.fileName} (${note.fileSize})',
-                                      style: const TextStyle(fontSize: 11)),
-                                  onTap: () {
-                                    PdfDocumentViewerModal.open(context, note);
-                                  },
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.visibility, color: Color(0xFF4F46E5)),
-                                        tooltip: 'View PDF Document',
-                                        onPressed: () {
-                                          PdfDocumentViewerModal.open(context, note);
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.download, color: Color(0xFF10B981)),
-                                        tooltip: 'Download Note PDF',
-                                        onPressed: () {
-                                          PdfDocumentViewerModal.open(context, note);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // SECTION 5: Student Password & Account Settings
-              Card(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.lock_reset, color: Color(0xFF4F46E5)),
-                          const SizedBox(width: 8),
-                          Text(_appData.tr('Security & Password Settings'), style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: textColor)),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: const Color(0xFF4F46E5),
-                            side: const BorderSide(color: Color(0xFF4F46E5)),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          onPressed: () {
-                            _showStudentChangePasswordDialog(context, cardColor, textColor);
-                          },
-                          icon: const Icon(Icons.password),
-                          label: const Text('Change My Password / PIN', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  void _showStudentChangePasswordDialog(BuildContext context, Color cardColor, Color textColor) {
-    final oldPassController = TextEditingController();
-    final newPassController = TextEditingController();
+  Widget _buildNavPill(int index, String label, IconData icon) {
+    final isSel = _selectedNavTab == index;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: ChoiceChip(
+        selected: isSel,
+        showCheckmark: false,
+        avatar: Icon(icon, size: 16, color: isSel ? Colors.white : const Color(0xFF4F46E5)),
+        label: Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: isSel ? Colors.white : const Color(0xFF1E293B))),
+        selectedColor: const Color(0xFF4F46E5),
+        backgroundColor: Colors.grey.shade100,
+        onSelected: (_) => setState(() => _selectedNavTab = index),
+      ),
+    );
+  }
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: cardColor,
-          title: Text('Change Password / PIN', style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 16)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+  // ================= TAB 0: OVERVIEW (Matching Photo 3 & 4 Layouts) =================
+  Widget _buildOverviewTab(UserModel? student, double attendancePercent, int present, int absent, int leave, List<NoteModel> notes, List<FeeModel> fees, Color cardColor, Color textColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Welcome Greeting Banner
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [Color(0xFF4F46E5), Color(0xFF6366F1)]),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: const Color(0xFF4F46E5).withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+          ),
+          child: Row(
             children: [
-              TextField(
-                controller: oldPassController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Current Password / PIN *', border: OutlineInputBorder()),
+              const CircleAvatar(
+                radius: 28,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: Color(0xFF4F46E5), size: 36),
               ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: newPassController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'New Password / PIN *', border: OutlineInputBorder()),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome back, ${student?.name ?? "Student"}! 👋',
+                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${student?.assignedClass} • Roll No: ${student?.rollNo}',
+                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                    const Text(
+                      AppData.instituteName,
+                      style: TextStyle(color: Colors.white60, fontSize: 11),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
-              onPressed: () {
-                final oldP = oldPassController.text.trim();
-                final newP = newPassController.text.trim();
-                if (oldP.isEmpty || newP.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please fill both current and new password fields!')),
-                  );
-                  return;
-                }
-                final success = _appData.changeCurrentUserPassword(oldP, newP);
-                if (success) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Password / PIN updated successfully!')),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Incorrect current password / PIN!')),
-                  );
-                }
-              },
-              child: const Text('Update Password'),
+        ),
+        const SizedBox(height: 16),
+
+        // Attendance Donut Chart & Progress Cards (Matching Photo 3 "Class Wise Performance")
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: CircularProgressIndicator(
+                              value: attendancePercent / 100,
+                              strokeWidth: 10,
+                              backgroundColor: Colors.grey.shade200,
+                              color: attendancePercent >= 75 ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                            ),
+                          ),
+                          Text('${attendancePercent.toStringAsFixed(0)}%', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: textColor)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Text('Attendance Average', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
+                        child: Text(
+                          attendancePercent >= 75 ? '95% Good' : 'Low (<75%)',
+                          style: TextStyle(color: attendancePercent >= 75 ? const Color(0xFF10B981) : Colors.red, fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                children: [
+                  _buildStatCard('Present Days', '$present Days', Icons.check_circle, const Color(0xFF10B981), cardColor, textColor),
+                  const SizedBox(height: 8),
+                  _buildStatCard('Absent Days', '$absent Days', Icons.cancel, const Color(0xFFEF4444), cardColor, textColor),
+                ],
+              ),
             ),
           ],
+        ),
+        const SizedBox(height: 20),
+
+        // Quick Access Classroom Portal Card
+        InkWell(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const ClassroomHubScreen()));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE11D48),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: const Color(0xFFE11D48).withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.menu_book, color: Colors.white, size: 32),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Open SUG Classroom Portal', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text('Course Work, Resources, Homework, Results & Quizzes', style: TextStyle(color: Colors.white70, fontSize: 11)),
+                    ],
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Study Notes Quick Preview Section
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Recent Notes & Materials', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+            TextButton(
+              onPressed: () => setState(() => _selectedNavTab = 2),
+              child: const Text('View All Notes'),
+            ),
+          ],
+        ),
+        ...notes.take(2).map((n) => _buildNoteCard(n, cardColor, textColor)),
+      ],
+    );
+  }
+
+  Widget _buildStatCard(String title, String val, IconData icon, Color col, Color cardColor, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: cardColor, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        children: [
+          Icon(icon, color: col, size: 24),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+              Text(val, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: textColor)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================= TAB 1: DAY-BY-DAY ATTENDANCE & CALENDAR =================
+  Widget _buildAttendanceCalendarTab(UserModel? student, int daysInMonth, int present, int absent, int leave, int lateDays, double pct, Color cardColor, Color textColor) {
+    return Card(
+      color: cardColor,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Day-by-Day Attendance Log', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios, size: 14),
+                      onPressed: () {
+                        setState(() {
+                          if (_selectedMonth == 1) {
+                            _selectedMonth = 12;
+                            _selectedYear--;
+                          } else {
+                            _selectedMonth--;
+                          }
+                        });
+                      },
+                    ),
+                    Text('$_selectedMonth/$_selectedYear', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios, size: 14),
+                      onPressed: () {
+                        setState(() {
+                          if (_selectedMonth == 12) {
+                            _selectedMonth = 1;
+                            _selectedYear++;
+                          } else {
+                            _selectedMonth++;
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Summary Badges
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildAttendanceBadge('Present', '$present', Colors.green),
+                _buildAttendanceBadge('Absent', '$absent', Colors.red),
+                _buildAttendanceBadge('Leave', '$leave', Colors.blue),
+                _buildAttendanceBadge('Late', '$lateDays', Colors.orange),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Day-by-Day Date Grid (Mon-Sun)
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7,
+                childAspectRatio: 1.0,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
+              ),
+              itemCount: daysInMonth,
+              itemBuilder: (context, idx) {
+                final day = idx + 1;
+                final dateStr = '$_selectedYear-${_selectedMonth.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+                final rec = _appData.attendanceRecords.firstWhere(
+                  (r) => r.studentId == student?.id && AppData.formatLocalDate(r.date) == dateStr,
+                  orElse: () => AttendanceRecord(studentId: '', studentName: '', className: '', date: DateTime.now(), status: '', markedBy: ''),
+                );
+
+                Color dateBg = Colors.grey.shade100;
+                Color textCol = Colors.black87;
+                String statusLetter = '';
+
+                if (rec.status == 'Present') {
+                  dateBg = Colors.green.shade100;
+                  textCol = Colors.green.shade900;
+                  statusLetter = 'P';
+                } else if (rec.status == 'Absent') {
+                  dateBg = Colors.red.shade100;
+                  textCol = Colors.red.shade900;
+                  statusLetter = 'A';
+                } else if (rec.status == 'Leave') {
+                  dateBg = Colors.blue.shade100;
+                  textCol = Colors.blue.shade900;
+                  statusLetter = 'L';
+                } else if (rec.status == 'Holiday') {
+                  dateBg = Colors.purple.shade100;
+                  textCol = Colors.purple.shade900;
+                  statusLetter = 'H';
+                }
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: dateBg,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: textCol.withOpacity(0.3)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('$day', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: textCol)),
+                      if (statusLetter.isNotEmpty)
+                        Text(statusLetter, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: textCol)),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAttendanceBadge(String label, String val, Color col) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(color: col.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        children: [
+          Text(val, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: col)),
+          Text(label, style: TextStyle(fontSize: 10, color: col)),
+        ],
+      ),
+    );
+  }
+
+  // ================= TAB 2: STUDY NOTES CARDS (Matching Photo 4 "Eduhouse" Soft Cards) =================
+  Widget _buildStudyNotesCardsTab(List<NoteModel> notes, Color cardColor, Color textColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Study Notes & E-Books', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+            IconButton(
+              icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Search Note Title, Subject...',
+            prefixIcon: const Icon(Icons.search, size: 20),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          ),
+          onChanged: (val) => setState(() => _notesSearchQuery = val),
+        ),
+        const SizedBox(height: 14),
+
+        notes.isEmpty
+            ? const Center(child: Padding(padding: EdgeInsets.all(24), child: Text('No study notes found.')))
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: notes.length,
+                itemBuilder: (context, idx) {
+                  final note = notes[idx];
+                  return _buildNoteCard(note, cardColor, textColor);
+                },
+              ),
+      ],
+    );
+  }
+
+  Widget _buildNoteCard(NoteModel note, Color cardColor, Color textColor) {
+    return Card(
+      color: cardColor,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10)),
+                  child: const Icon(Icons.picture_as_pdf, color: Colors.red, size: 28),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(note.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textColor)),
+                      Text('Subject: ${note.subject} • ${note.fileName}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Size: ${note.fileSize} • By ${note.uploadedBy}', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                Row(
+                  children: [
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFF4F46E5),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      ),
+                      onPressed: () {
+                        PdfDocumentViewerModal.open(context, note);
+                      },
+                      icon: const Icon(Icons.visibility, size: 16),
+                      label: const Text('Read PDF', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF10B981),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      ),
+                      onPressed: () {
+                        PdfDocumentViewerModal.open(context, note);
+                      },
+                      icon: const Icon(Icons.download, size: 16),
+                      label: const Text('Download', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ================= TAB 3: FEES LEDGER =================
+  Widget _buildFeesLedgerTab(List<FeeModel> fees, Color cardColor, Color textColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Fees & Receipts Ledger', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+        const SizedBox(height: 12),
+
+        ...fees.map((f) {
+          final isPaid = f.isPaid;
+          return Card(
+            color: cardColor,
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            child: ListTile(
+              leading: Icon(
+                isPaid ? Icons.check_circle : Icons.pending,
+                color: isPaid ? const Color(0xFF10B981) : Colors.red,
+              ),
+              title: Text('${f.month}: ₹${f.amount.toStringAsFixed(0)}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textColor)),
+              subtitle: Text('Receipt: ${f.receiptNo} • Date: ${f.date}', style: const TextStyle(fontSize: 11)),
+              trailing: Chip(
+                label: Text(isPaid ? 'PAID' : 'UNPAID', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10)),
+                backgroundColor: isPaid ? const Color(0xFF10B981) : Colors.red,
+              ),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  // ================= TAB 4: SECURITY & PASSWORD SETTINGS =================
+  Widget _buildSecuritySettingsTab(Color cardColor, Color textColor) {
+    final oldPassController = TextEditingController();
+    final newPassController = TextEditingController();
+    bool obscureOld = true;
+    bool obscureNew = true;
+
+    return StatefulBuilder(
+      builder: (context, setModalState) {
+        return Card(
+          color: cardColor,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.lock_reset, color: Color(0xFF4F46E5)),
+                    const SizedBox(width: 8),
+                    Text('Change Student Password / PIN', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                TextField(
+                  controller: oldPassController,
+                  obscureText: obscureOld,
+                  decoration: InputDecoration(
+                    labelText: 'Current Password / PIN *',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(obscureOld ? Icons.visibility_off : Icons.visibility),
+                      onPressed: () => setModalState(() => obscureOld = !obscureOld),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                TextField(
+                  controller: newPassController,
+                  obscureText: obscureNew,
+                  decoration: InputDecoration(
+                    labelText: 'New Password / PIN *',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(obscureNew ? Icons.visibility_off : Icons.visibility),
+                      onPressed: () => setModalState(() => obscureNew = !obscureNew),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4F46E5), foregroundColor: Colors.white),
+                    onPressed: () {
+                      final oldP = oldPassController.text.trim();
+                      final newP = newPassController.text.trim();
+                      if (oldP.isEmpty || newP.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter both passwords')));
+                        return;
+                      }
+                      final ok = _appData.changeCurrentUserPassword(oldP, newP);
+                      if (ok) {
+                        oldPassController.clear();
+                        newPassController.clear();
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password updated successfully!')));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Incorrect current password / PIN')));
+                      }
+                    },
+                    child: const Text('Update Password', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
   }
-}
-
-class StudentTrendPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF4F46E5)
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-
-    final path = Path();
-    path.moveTo(0, size.height * 0.7);
-    path.lineTo(size.width * 0.3, size.height * 0.4);
-    path.lineTo(size.width * 0.6, size.height * 0.6);
-    path.lineTo(size.width, size.height * 0.2);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

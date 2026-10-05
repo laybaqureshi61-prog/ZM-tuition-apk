@@ -627,9 +627,14 @@ class _StudentDashboardState extends State<StudentDashboard> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+      child: InkWell(
+        onTap: () {
+          PdfDocumentViewerModal.open(context, note);
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -689,6 +694,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
           ],
         ),
       ),
+    ),
     );
   }
 

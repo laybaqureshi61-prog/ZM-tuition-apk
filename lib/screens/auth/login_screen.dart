@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
   late String _selectedRole;
   final AppData _appData = AppData();
 
@@ -203,12 +204,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       style: const TextStyle(color: Colors.black87),
                       decoration: InputDecoration(
                         labelText: isAdmin ? 'Password *' : 'Student PIN / Password *',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                         prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF4F46E5)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),

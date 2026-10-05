@@ -16,6 +16,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _rollController = TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   String _selectedClass = AppData.allClasses.first;
   final AppData _appData = AppData();
@@ -132,17 +134,33 @@ class _SignupScreenState extends State<SignupScreen> {
 
                     TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       style: const TextStyle(color: Colors.black87),
-                      decoration: const InputDecoration(labelText: 'Password *', border: OutlineInputBorder(), prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF4F46E5))),
+                      decoration: InputDecoration(
+                        labelText: 'Password *',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF4F46E5)),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Colors.grey),
+                          onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 16),
 
                     TextField(
                       controller: _confirmPasswordController,
-                      obscureText: true,
+                      obscureText: _obscureConfirmPassword,
                       style: const TextStyle(color: Colors.black87),
-                      decoration: const InputDecoration(labelText: 'Confirm Password', border: OutlineInputBorder(), prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF4F46E5))),
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF4F46E5)),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscureConfirmPassword ? Icons.visibility_off : Icons.visibility, color: Colors.grey),
+                          onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 24),
 

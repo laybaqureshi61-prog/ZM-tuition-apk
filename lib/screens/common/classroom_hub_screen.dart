@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models.dart';
 import '../../services/app_data.dart';
 import '../admin/upload_notes_screen.dart';
+import 'pdf_document_viewer.dart';
 
 class ClassroomHubScreen extends StatefulWidget {
   const ClassroomHubScreen({super.key});
@@ -322,6 +323,15 @@ class _ClassroomHubScreenState extends State<ClassroomHubScreen> {
                         leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
                         title: Text(note.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                         subtitle: Text('File: ${note.fileName} (${note.fileSize}) • Date: ${note.date}', style: const TextStyle(fontSize: 11)),
+                        onTap: () {
+                          PdfDocumentViewerModal.open(context, note);
+                        },
+                        trailing: IconButton(
+                          icon: const Icon(Icons.download_for_offline, color: Color(0xFFE11D48)),
+                          onPressed: () {
+                            PdfDocumentViewerModal.open(context, note);
+                          },
+                        ),
                       ),
                     );
                   },

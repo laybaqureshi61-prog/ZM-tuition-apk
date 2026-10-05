@@ -4,6 +4,7 @@ import '../../models.dart';
 import '../../services/app_data.dart';
 import '../auth/login_screen.dart';
 import '../common/notifications_screen.dart';
+import '../common/pdf_document_viewer.dart';
 import 'live_test_screen.dart';
 
 class StudentDashboard extends StatefulWidget {
@@ -588,8 +589,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                 final note = studentNotes[idx];
                                 return ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  leading: const Icon(Icons.picture_as_pdf,
-                                      color: Colors.red),
+                                  leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
                                   title: Text(note.title,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -598,17 +598,27 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                   subtitle: Text(
                                       'Subject: ${note.subject} • ${note.fileName} (${note.fileSize})',
                                       style: const TextStyle(fontSize: 11)),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.download_for_offline, color: Color(0xFF4F46E5)),
-                                    tooltip: 'Download Note PDF',
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text('Downloading ${note.fileName} (${note.fileSize})... Download Complete! Saved to Downloads.'),
-                                          backgroundColor: const Color(0xFF10B981),
-                                        ),
-                                      );
-                                    },
+                                  onTap: () {
+                                    PdfDocumentViewerModal.open(context, note);
+                                  },
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.visibility, color: Color(0xFF4F46E5)),
+                                        tooltip: 'View PDF Document',
+                                        onPressed: () {
+                                          PdfDocumentViewerModal.open(context, note);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.download, color: Color(0xFF10B981)),
+                                        tooltip: 'Download Note PDF',
+                                        onPressed: () {
+                                          PdfDocumentViewerModal.open(context, note);
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 );
                               },

@@ -85,7 +85,7 @@ class _ClassroomHubScreenState extends State<ClassroomHubScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFE11D48), // Vibrant Red Header as in Image 1
         foregroundColor: Colors.white,
-        title: const Text('SUG Classroom', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        title: const Text('ZM Classroom', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),

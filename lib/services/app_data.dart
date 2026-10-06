@@ -116,6 +116,64 @@ class AppData extends ChangeNotifier {
     return rec;
   }
 
+  // Security Audit Logs
+  final List<AuditLogModel> auditLogs = [
+    AuditLogModel(
+      id: 'log_1',
+      timestamp: 'Today, 10:24 AM',
+      event: 'Password Reset Triggered',
+      userIdentifier: 'zm@124 (Zoya)',
+      ipAddress: '192.168.1.102',
+      details: '6-digit OTP verified successfully. Password updated in AppData.',
+    ),
+    AuditLogModel(
+      id: 'log_2',
+      timestamp: 'Today, 09:15 AM',
+      event: 'Failed Login Attempt',
+      userIdentifier: 'zm@124',
+      ipAddress: '10.0.0.12',
+      details: 'Invalid password credential attempt logged.',
+    ),
+    AuditLogModel(
+      id: 'log_3',
+      timestamp: 'Yesterday, 04:45 PM',
+      event: 'Password Reset Triggered',
+      userIdentifier: 'student@123 (Ayesha Khan)',
+      ipAddress: '192.168.1.105',
+      details: 'OTP verified via SMS/Email recovery engine.',
+    ),
+    AuditLogModel(
+      id: 'log_4',
+      timestamp: 'Yesterday, 02:30 PM',
+      event: 'Account Status Toggle',
+      userIdentifier: 'student_6 (Priya Verma)',
+      ipAddress: '192.168.1.1',
+      details: 'Status changed to Approved by Admin.',
+    ),
+  ];
+
+  void addAuditLog({
+    required String event,
+    required String userIdentifier,
+    required String ipAddress,
+    required String details,
+  }) {
+    final now = DateTime.now();
+    final timeStr = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    auditLogs.insert(
+      0,
+      AuditLogModel(
+        id: 'log_${now.millisecondsSinceEpoch}',
+        timestamp: 'Today, $timeStr',
+        event: event,
+        userIdentifier: userIdentifier,
+        ipAddress: ipAddress,
+        details: details,
+      ),
+    );
+    notifyListeners();
+  }
+
   // Admins List
   final List<UserModel> admins = [
     UserModel(
@@ -473,6 +531,7 @@ class AppData extends ChangeNotifier {
       final query = identifier.trim().toLowerCase();
       final user = users.firstWhere((u) {
         if (u.role != role) return false;
+        if (u.status == 'suspended') return false;
         final matchEmail = u.email.toLowerCase() == query;
         final matchPhone = u.phone == query || u.parentPhone == query;
         final matchRoll = u.rollNo.toLowerCase() == query;
@@ -488,10 +547,99 @@ class AppData extends ChangeNotifier {
       });
 
       currentUser = user;
+      addAuditLog(
+        event: 'User Login',
+        userIdentifier: '${user.name} (${user.email})',
+        ipAddress: '192.168.1.100',
+        details: 'Successful login as $role',
+      );
       notifyListeners();
       return true;
     } catch (_) {
+      addAuditLog(
+        event: 'Failed Login Attempt',
+        userIdentifier: identifier,
+        ipAddress: '192.168.1.120',
+        details: 'Invalid credentials or suspended account attempt for role $role',
+      );
       return false;
+    }
+  }
+
+  UserModel? findUserByIdentifier(String identifier) {
+    final query = identifier.trim().toLowerCase();
+    try {
+      return users.firstWhere((u) {
+        return u.email.toLowerCase() == query ||
+            u.phone == query ||
+            u.parentPhone == query ||
+            u.rollNo.toLowerCase() == query ||
+            u.name.toLowerCase() == query;
+      });
+    } catch (_) {
+      return null;
+    }
+  }
+
+  bool resetPasswordByIdentifier(String identifier, String newPassword) {
+    final query = identifier.trim().toLowerCase();
+    int foundIndex = users.indexWhere((u) {
+      return u.email.toLowerCase() == query ||
+          u.phone == query ||
+          u.parentPhone == query ||
+          u.rollNo.toLowerCase() == query ||
+          u.name.toLowerCase() == query;
+    });
+
+    if (foundIndex != -1) {
+      final oldUser = users[foundIndex];
+      final updatedUser = UserModel(
+        id: oldUser.id,
+        name: oldUser.name,
+        email: oldUser.email,
+        password: newPassword,
+        role: oldUser.role,
+        status: oldUser.status,
+        assignedClass: oldUser.assignedClass,
+        rollNo: oldUser.rollNo,
+        phone: oldUser.phone,
+        parentPhone: oldUser.parentPhone,
+        address: oldUser.address,
+        isArchived: oldUser.isArchived,
+        studentPin: newPassword.length >= 4 ? newPassword.substring(0, 4) : newPassword,
+      );
+      users[foundIndex] = updatedUser;
+
+      final adminIndex = admins.indexWhere((a) => a.id == oldUser.id || a.email.toLowerCase() == oldUser.email.toLowerCase());
+      if (adminIndex != -1) {
+        admins[adminIndex] = updatedUser;
+      }
+
+      addAuditLog(
+        event: 'Password Reset Triggered',
+        userIdentifier: '${oldUser.name} (${oldUser.email})',
+        ipAddress: '192.168.1.105',
+        details: 'Password successfully reset via 3-step OTP engine. Immediate login active.',
+      );
+
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  void toggleUserAccountStatus(String userId, String newStatus) {
+    final index = users.indexWhere((u) => u.id == userId);
+    if (index != -1) {
+      final user = users[index];
+      user.status = newStatus;
+      addAuditLog(
+        event: 'Account Status Toggle',
+        userIdentifier: '${user.name} (${user.role})',
+        ipAddress: '192.168.1.1',
+        details: 'Account status updated to "$newStatus"',
+      );
+      notifyListeners();
     }
   }
 
@@ -514,11 +662,24 @@ class AppData extends ChangeNotifier {
         phone: currentUser!.phone,
         parentPhone: currentUser!.parentPhone,
         address: currentUser!.address,
-        studentPin: newPassword,
+        studentPin: newPassword.length >= 4 ? newPassword.substring(0, 4) : newPassword,
         isArchived: currentUser!.isArchived,
       );
       users[index] = updated;
       currentUser = updated;
+
+      final adminIndex = admins.indexWhere((a) => a.id == currentUser!.id || a.email.toLowerCase() == currentUser!.email.toLowerCase());
+      if (adminIndex != -1) {
+        admins[adminIndex] = updated;
+      }
+
+      addAuditLog(
+        event: 'User Password Change',
+        userIdentifier: '${currentUser!.name} (${currentUser!.email})',
+        ipAddress: '192.168.1.100',
+        details: 'Self password update completed',
+      );
+
       notifyListeners();
       return true;
     }
@@ -554,6 +715,12 @@ class AppData extends ChangeNotifier {
     );
     users.add(newUser);
     currentUser = newUser;
+    addAuditLog(
+      event: 'Student Registration',
+      userIdentifier: '$name ($email)',
+      ipAddress: '192.168.1.110',
+      details: 'New student self-registered, status set to pending',
+    );
     notifyListeners();
     return true;
   }
@@ -595,6 +762,12 @@ class AppData extends ChangeNotifier {
       isPaid: false,
       date: 'Pending',
     ));
+    addAuditLog(
+      event: 'Direct Student Creation',
+      userIdentifier: '$name ($assignedClass)',
+      ipAddress: '192.168.1.1',
+      details: 'Directly added student by admin',
+    );
     notifyListeners();
   }
 
@@ -621,6 +794,12 @@ class AppData extends ChangeNotifier {
   void resetStudentPin(String studentId, String newPin) {
     final user = users.firstWhere((u) => u.id == studentId, orElse: () => users.first);
     user.studentPin = newPin;
+    addAuditLog(
+      event: 'Admin PIN Reset',
+      userIdentifier: '${user.name} (${user.id})',
+      ipAddress: '192.168.1.1',
+      details: 'Student PIN updated by Admin',
+    );
     notifyListeners();
   }
 
@@ -706,12 +885,24 @@ class AppData extends ChangeNotifier {
       isPaid: false,
       date: 'Pending',
     ));
+    addAuditLog(
+      event: 'Student Approval',
+      userIdentifier: '${user.name} (${user.email})',
+      ipAddress: '192.168.1.1',
+      details: 'Approved and assigned to $assignedClass',
+    );
     notifyListeners();
   }
 
   void rejectStudent(String studentId) {
     final user = users.firstWhere((u) => u.id == studentId);
     user.status = 'rejected';
+    addAuditLog(
+      event: 'Student Rejection',
+      userIdentifier: '${user.name} (${user.email})',
+      ipAddress: '192.168.1.1',
+      details: 'Registration request rejected',
+    );
     notifyListeners();
   }
 
@@ -741,6 +932,14 @@ class AppData extends ChangeNotifier {
       fee.isPaid = false;
       fee.isPartial = false;
     }
+
+    addAuditLog(
+      event: 'Fee Payment Recorded',
+      userIdentifier: '${fee.studentName} (${fee.month})',
+      ipAddress: '192.168.1.1',
+      details: 'Paid ₹$paidAmount via $paymentMode. Receipt: ${fee.receiptNo}',
+    );
+
     notifyListeners();
   }
 
@@ -779,6 +978,7 @@ class AppData extends ChangeNotifier {
       'homeworkList': homeworkList.map((h) => h.toJson()).toList(),
       'testSeriesList': testSeriesList.map((t) => t.toJson()).toList(),
       'testResults': testResults.map((r) => r.toJson()).toList(),
+      'auditLogs': auditLogs.map((l) => l.toJson()).toList(),
       'archivedBatches': archivedBatches,
       'exportedAt': DateTime.now().toIso8601String(),
     };
@@ -841,6 +1041,12 @@ class AppData extends ChangeNotifier {
         testResults.clear();
         for (var r in data['testResults']) {
           testResults.add(TestResultModel.fromJson(r));
+        }
+      }
+      if (data.containsKey('auditLogs')) {
+        auditLogs.clear();
+        for (var l in data['auditLogs']) {
+          auditLogs.add(AuditLogModel.fromJson(l));
         }
       }
       if (data.containsKey('archivedBatches')) {

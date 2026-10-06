@@ -19,11 +19,12 @@ class ZmApp extends StatelessWidget {
       builder: (context, _) {
         final isDark = appData.isDarkMode;
 
-        // Modern Theme Palette
-        const primaryColor = Color(0xFF4F46E5); // Indigo
-        const successColor = Color(0xFF22C55E); // Green
-        const dangerColor = Color(0xFFEF4444); // Red
-        const warningColor = Color(0xFFEAB308); // Amber/Yellow
+        // Master PRD Design Tokens
+        const royalBlue = Color(0xFF2563EB);
+        const electricIndigo = Color(0xFF5B5FC7);
+        const emeraldGreen = Color(0xFF10B981);
+        const crimson = Color(0xFFEF4444);
+        const softOffWhite = Color(0xFFF8FAFC);
 
         final baseTextTheme = GoogleFonts.poppinsTextTheme(
           isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
@@ -32,19 +33,20 @@ class ZmApp extends StatelessWidget {
         final themeData = ThemeData(
           useMaterial3: true,
           brightness: isDark ? Brightness.dark : Brightness.light,
-          primaryColor: primaryColor,
+          primaryColor: royalBlue,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: primaryColor,
+            seedColor: royalBlue,
             brightness: isDark ? Brightness.dark : Brightness.light,
-            primary: primaryColor,
-            secondary: successColor,
-            error: dangerColor,
+            primary: royalBlue,
+            secondary: electricIndigo,
+            tertiary: emeraldGreen,
+            error: crimson,
             surface: isDark ? const Color(0xFF1E293B) : Colors.white,
           ),
-          scaffoldBackgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+          scaffoldBackgroundColor: isDark ? const Color(0xFF0F172A) : softOffWhite,
           textTheme: appData.isHindi ? GoogleFonts.notoSansDevanagariTextTheme(baseTextTheme) : baseTextTheme,
           appBarTheme: AppBarTheme(
-            backgroundColor: isDark ? const Color(0xFF1E293B) : primaryColor,
+            backgroundColor: isDark ? const Color(0xFF1E293B) : royalBlue,
             foregroundColor: Colors.white,
             elevation: 0,
             centerTitle: false,

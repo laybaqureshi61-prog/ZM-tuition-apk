@@ -4,7 +4,7 @@ class UserModel {
   final String email;
   final String password;
   final String role; // 'admin' or 'student'
-  String status; // 'pending', 'approved', 'rejected'
+  String status; // 'pending', 'approved', 'rejected', 'suspended'
   String assignedClass;
   final String rollNo;
   final String phone;
@@ -59,6 +59,42 @@ class UserModel {
         address: json['address'] ?? '',
         isArchived: json['isArchived'] ?? false,
         studentPin: json['studentPin'] ?? '1234',
+      );
+}
+
+class AuditLogModel {
+  final String id;
+  final String timestamp;
+  final String event; // 'Password Reset Triggered', 'Failed Login Attempt', etc.
+  final String userIdentifier;
+  final String ipAddress;
+  final String details;
+
+  AuditLogModel({
+    required this.id,
+    required this.timestamp,
+    required this.event,
+    required this.userIdentifier,
+    required this.ipAddress,
+    required this.details,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'timestamp': timestamp,
+        'event': event,
+        'userIdentifier': userIdentifier,
+        'ipAddress': ipAddress,
+        'details': details,
+      };
+
+  factory AuditLogModel.fromJson(Map<String, dynamic> json) => AuditLogModel(
+        id: json['id'] ?? '',
+        timestamp: json['timestamp'] ?? '',
+        event: json['event'] ?? '',
+        userIdentifier: json['userIdentifier'] ?? '',
+        ipAddress: json['ipAddress'] ?? '',
+        details: json['details'] ?? '',
       );
 }
 

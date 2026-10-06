@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: Text(isAdmin ? 'Admin Portal Login' : 'Student Portal Login'),
-        backgroundColor: const Color(0xFF4F46E5),
+        backgroundColor: const Color(0xFF2563EB),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -109,19 +109,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF4F46E5).withValues(alpha: 0.1),
+                        color: const Color(0xFF2563EB).withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         isAdmin ? Icons.admin_panel_settings : Icons.school,
                         size: 40,
-                        color: const Color(0xFF4F46E5),
+                        color: const Color(0xFF2563EB),
                       ),
                     ),
                     const SizedBox(height: 12),
                     const Text(
                       AppData.instituteName,
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF4F46E5)),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF2563EB)),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 4),
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       selected: {_selectedRole},
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.selected) ? const Color(0xFF4F46E5) : Colors.grey.shade100,
+                          (states) => states.contains(WidgetState.selected) ? const Color(0xFF2563EB) : Colors.grey.shade100,
                         ),
                         foregroundColor: WidgetStateProperty.resolveWith(
                           (states) => states.contains(WidgetState.selected) ? Colors.white : Colors.black87,
@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: isAdmin ? 'Email / User ID' : 'Roll No / Phone / Email *',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                        prefixIcon: Icon(isAdmin ? Icons.email_outlined : Icons.badge_outlined, color: const Color(0xFF4F46E5)),
+                        prefixIcon: Icon(isAdmin ? Icons.email_outlined : Icons.badge_outlined, color: const Color(0xFF2563EB)),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -209,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: isAdmin ? 'Password *' : 'Student PIN / Password *',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF4F46E5)),
+                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF2563EB)),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -230,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4F46E5),
+                          backgroundColor: const Color(0xFF2563EB),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
@@ -254,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupScreen()));
                             },
-                            child: const Text('Register Here', style: TextStyle(color: Color(0xFF4F46E5), fontWeight: FontWeight.bold, fontSize: 12)),
+                            child: const Text('Register Here', style: TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.bold, fontSize: 12)),
                           ),
                       ],
                     ),

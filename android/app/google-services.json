@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "602402517194",
+    "project_id": "zmapp-1a436",
+    "storage_bucket": "zmapp-1a436.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602402517194:android:99c4cfb2d86d01d67c8433",
+        "android_client_info": {
+          "package_name": "com.example.zm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRe3XxKjiP4wny8zK5Gwmxlv8GLUBaN4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -352,15 +352,84 @@ class _StudentDashboardState extends State<StudentDashboard> {
         ),
         const SizedBox(height: 16),
 
-        // PROGRESS DASHBOARD: ENROLLED COURSES & COMPLETION BARS
-        Text('Enrolled Courses & Course Progress', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+        // Jetpack Compose M3 Style Attendance KPI Card
+        Card(
+          color: const Color(0xFFE0E7FF), // primaryContainer
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Overall Attendance', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFF3730A3))),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: attendancePercent / 100,
+                    minHeight: 8,
+                    backgroundColor: Colors.indigo.shade100,
+                    color: const Color(0xFF2563EB),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${(attendancePercent).toInt()}%', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E1B4B))),
+                    Text(attendancePercent >= 75 ? '92% Good' : 'Low (<75%)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: attendancePercent >= 75 ? const Color(0xFF059669) : Colors.red)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Enrolled Subjects Section (Jetpack Compose M3 Style)
+        Text('Enrolled Subjects', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
         const SizedBox(height: 10),
 
-        _buildCourseProgressCard('Mathematics & Algebra', 'Class 10th (Science & Math)', 0.78, '78% Completed', const Color(0xFF2563EB), cardColor, textColor),
-        const SizedBox(height: 8),
-        _buildCourseProgressCard('Science, Magnetism & Physics', 'Class 10th (Science & Math)', 0.65, '65% Completed', const Color(0xFF10B981), cardColor, textColor),
-        const SizedBox(height: 8),
-        _buildCourseProgressCard('Accountancy & Ledger Accounts', 'Commerce Stream', 0.90, '90% Completed', const Color(0xFF5B5FC7), cardColor, textColor),
+        ...List.generate(3, (index) {
+          final moduleNames = ['Mathematics & Algebra', 'Science & Magnetism', 'Accountancy & Ledger'];
+          return Card(
+            color: cardColor,
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Subject Module ${index + 1}: ${moduleNames[index]}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textColor)),
+                        const Text('Status: Active', style: TextStyle(fontSize: 11, color: Color(0xFF059669), fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2563EB),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    onPressed: () {
+                      if (notes.length > index) {
+                        PdfDocumentViewerModal.open(context, notes[index]);
+                      } else if (notes.isNotEmpty) {
+                        PdfDocumentViewerModal.open(context, notes.first);
+                      }
+                    },
+                    child: const Text('View', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
         const SizedBox(height: 16),
 
         // LESSON RESUME POINT CARD

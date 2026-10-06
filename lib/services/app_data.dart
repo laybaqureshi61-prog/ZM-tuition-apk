@@ -525,6 +525,44 @@ class AppData extends ChangeNotifier {
     ),
   ];
 
+  // JWT & RBAC Middleware Security Simulation (Express.js style)
+  String generateJwtBearerToken() {
+    if (currentUser == null) return '';
+    final payload = {
+      'id': currentUser!.id,
+      'name': currentUser!.name,
+      'role': currentUser!.role.toUpperCase(),
+      'exp': DateTime.now().add(const Duration(hours: 24)).millisecondsSinceEpoch,
+    };
+    return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${base64Url.encode(utf8.encode(payload.toString()))}.zm_secret_sig';
+  }
+
+  Map<String, dynamic> authenticateTokenAndAuthorize(String bearerToken, List<String> allowedRoles) {
+    if (bearerToken.isEmpty || !bearerToken.startsWith('Bearer ')) {
+      return {'status': 401, 'error': 'Access Denied: Missing Security Token'};
+    }
+    if (currentUser == null) {
+      return {'status': 403, 'error': 'Forbidden: Invalid or Expired Session'};
+    }
+    final userRole = currentUser!.role.toUpperCase();
+    if (!allowedRoles.contains(userRole)) {
+      return {
+        'status': 403,
+        'error': 'Access Restricted: Requires one of [${allowedRoles.join(', ')}] permissions.'
+      };
+    }
+    return {'status': 200, 'success': true, 'userId': currentUser!.id};
+  }
+
+  List<TestResultModel> getSecureStudentGrades(String bearerToken) {
+    final authCheck = authenticateTokenAndAuthorize(bearerToken, ['STUDENT', 'ADMIN']);
+    if (authCheck['status'] != 200) {
+      return [];
+    }
+    final studentUserId = authCheck['userId'];
+    return testResults.where((r) => r.studentId == studentUserId || currentUser?.role == 'admin').toList();
+  }
+
   // Auth methods
   bool login(String identifier, String password, String role) {
     try {

@@ -581,6 +581,41 @@ class AppData extends ChangeNotifier {
     }
   }
 
+  bool adminResetPassword(String userId, String newPassword) {
+    int foundIndex = users.indexWhere((u) => u.id == userId);
+    if (foundIndex != -1) {
+      final oldUser = users[foundIndex];
+      final updatedUser = UserModel(
+        id: oldUser.id,
+        name: oldUser.name,
+        email: oldUser.email,
+        password: newPassword,
+        role: oldUser.role,
+        status: oldUser.status,
+        assignedClass: oldUser.assignedClass,
+        rollNo: oldUser.rollNo,
+        phone: oldUser.phone,
+        parentPhone: oldUser.parentPhone,
+        address: oldUser.address,
+        studentPin: newPassword,
+        isArchived: oldUser.isArchived,
+      );
+      users[foundIndex] = updatedUser;
+      if (currentUser?.id == oldUser.id) {
+        currentUser = updatedUser;
+      }
+      addAuditLog(
+        event: 'Password Reset',
+        userIdentifier: '${oldUser.name} (${oldUser.email})',
+        ipAddress: '192.168.1.100',
+        details: 'Password updated via recovery / admin panel',
+      );
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
   bool resetPasswordByIdentifier(String identifier, String newPassword) {
     final query = identifier.trim().toLowerCase();
     int foundIndex = users.indexWhere((u) {
@@ -588,7 +623,7 @@ class AppData extends ChangeNotifier {
           u.phone == query ||
           u.parentPhone == query ||
           u.rollNo.toLowerCase() == query ||
-          u.name.toLowerCase() == query;
+          u.name.toLowerCase().contains(query);
     });
 
     if (foundIndex != -1) {

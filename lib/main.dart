@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'services/app_data.dart';
 import 'screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyD-zmTuitionKey2026MasterApiKey",
+        appId: "1:100200300400:web:zmTuitionPortalApp",
+        messagingSenderId: "100200300400",
+        projectId: "zm-tuition-portal",
+        authDomain: "zm-tuition-portal.firebaseapp.com",
+        storageBucket: "zm-tuition-portal.appspot.com",
+      ),
+    );
+  } catch (e) {
+    debugPrint('Firebase Initialization status: $e');
+  }
   runApp(const ZmApp());
 }
 

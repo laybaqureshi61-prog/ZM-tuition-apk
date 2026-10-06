@@ -532,18 +532,16 @@ class AppData extends ChangeNotifier {
       final user = users.firstWhere((u) {
         if (u.role != role) return false;
         if (u.status == 'suspended') return false;
-        final matchEmail = u.email.toLowerCase() == query;
-        final matchPhone = u.phone == query || u.parentPhone == query;
-        final matchRoll = u.rollNo.toLowerCase() == query;
+        final matchQuery = u.email.toLowerCase() == query ||
+            u.phone == query ||
+            u.parentPhone == query ||
+            u.rollNo.toLowerCase() == query ||
+            u.name.toLowerCase() == query ||
+            u.name.toLowerCase().contains(query);
 
-        bool matchSecret = false;
-        if (role == 'student') {
-          matchSecret = (u.password == password || u.studentPin == password);
-        } else {
-          matchSecret = (u.password == password);
-        }
+        bool matchSecret = (u.password == password || u.studentPin == password);
 
-        return (matchEmail || matchPhone || matchRoll) && matchSecret;
+        return matchQuery && matchSecret;
       });
 
       currentUser = user;

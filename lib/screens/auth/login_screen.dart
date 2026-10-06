@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _identifierController.text = 'zm@124';
       _passwordController.text = '12345678';
     } else {
-      _identifierController.text = 'SU/01'; // Default Roll No / Phone or Email
+      _identifierController.text = 'ZM/01'; // Default Roll No / Phone or Email
       _passwordController.text = '1234'; // Default PIN / Password
     }
   }

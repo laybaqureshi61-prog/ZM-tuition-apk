@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _executeLogin() {
+  void _executeLogin() async {
     final identifier = _identifierController.text.trim();
     final secret = _passwordController.text.trim();
 
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final success = _appData.login(identifier, secret, _selectedRole);
+    final success = await _appData.loginWithFirebaseAuth(identifier, secret, _selectedRole);
     if (success) {
       final user = _appData.currentUser;
       if (user?.role == 'admin') {

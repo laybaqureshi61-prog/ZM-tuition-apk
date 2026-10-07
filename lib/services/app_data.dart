@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models.dart';
 
 class AppData extends ChangeNotifier {
@@ -524,6 +526,83 @@ class AppData extends ChangeNotifier {
       date: '2026-09-25',
     ),
   ];
+
+  // Firebase Authentication Integration
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<bool> loginWithFirebaseAuth(String emailOrIdentifier, String password, String role) async {
+    try {
+      final email = emailOrIdentifier.contains('@') ? emailOrIdentifier : '$emailOrIdentifier@zmtuition.com';
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+      if (userCredential.user != null) {
+        final localSuccess = login(emailOrIdentifier, password, role);
+        if (!localSuccess) {
+          currentUser = UserModel(
+            id: userCredential.user!.uid,
+            name: userCredential.user!.displayName ?? email.split('@')[0],
+            email: email,
+            password: password,
+            role: role,
+            status: 'approved',
+            assignedClass: 'Class 10th (Science & Math)',
+            rollNo: 'ZM/01',
+          );
+          notifyListeners();
+        }
+        return true;
+      }
+    } catch (e) {
+      debugPrint('Firebase Auth Login fallback to local state: $e');
+    }
+    return login(emailOrIdentifier, password, role);
+  }
+
+  Future<bool> signupWithFirebaseAuth({
+    required String name,
+    required String email,
+    required String password,
+    String rollNo = '',
+    String phone = '',
+  }) async {
+    try {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+      if (userCredential.user != null) {
+        await userCredential.user!.updateDisplayName(name);
+      }
+    } catch (e) {
+      debugPrint('Firebase Auth Signup fallback: $e');
+    }
+    return signupStudent(name: name, email: email, password: password, rollNo: rollNo, phone: phone);
+  }
+
+  Future<bool> resetPasswordWithFirebaseAuth(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
+      return true;
+    } catch (e) {
+      debugPrint('Firebase Password Reset Email Error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> changePasswordWithFirebaseAuth(String oldPassword, String newPassword) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        await user.updatePassword(newPassword);
+      }
+    } catch (e) {
+      debugPrint('Firebase Change Password Error: $e');
+    }
+    return changeCurrentUserPassword(oldPassword, newPassword);
+  }
 
   // JWT & RBAC Middleware Security Simulation (Express.js style)
   String generateJwtBearerToken() {

@@ -1,0 +1,1296 @@
+{
+  "users": [
+    {
+      "id": "admin_zoya",
+      "full_name": "Zoya",
+      "name": "Zoya",
+      "email": "businesszm437@gmail.com",
+      "phone": "+919876543201",
+      "password_hash": "$2b$10$6Cfiq9OF4MsJBpxKcaXDaODMLvEGDlUZ9W4XCkoI/4BWCpyYboDGK",
+      "role": "admin",
+      "adminType": "zoya",
+      "department": "Commerce",
+      "batch": "Class 11 & 12 (Commerce)",
+      "is_phone_verified": true,
+      "isVerified": true,
+      "createdAt": "2026-10-10T11:37:44.795Z"
+    },
+    {
+      "id": "admin_muskan",
+      "full_name": "Muskan",
+      "name": "Muskan",
+      "email": "muskan@zmtuition.com",
+      "phone": "+919876543202",
+      "password_hash": "$2b$10$6Cfiq9OF4MsJBpxKcaXDaODMLvEGDlUZ9W4XCkoI/4BWCpyYboDGK",
+      "role": "admin",
+      "adminType": "muskan",
+      "department": "Mathematics & Science",
+      "batch": "Class 9, 10, 11, 12 (Maths & Science)",
+      "is_phone_verified": true,
+      "isVerified": true,
+      "createdAt": "2026-10-10T11:37:44.797Z"
+    },
+    {
+      "id": "u_1791632838120",
+      "name": "Ayan Khan",
+      "email": "ayan.khan@gmail.com",
+      "phone": "9876543210",
+      "password": "$2b$10$hUG5/TStdZVv4lmN1BeMWe1.gylDdtSTH.I/zvZRUl8MN6kDcw/nq",
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 10 (Maths & Science)",
+      "is_phone_verified": true,
+      "isVerified": true,
+      "createdAt": "2026-10-10T11:47:18.120Z"
+    },
+    {
+      "id": "u_1791633590456",
+      "name": "Zoya",
+      "email": "zoya@example.com",
+      "phone": "9876543211",
+      "password": "$2b$10$UNT5.nW9ywdqnsXMZNsF/.RzAlvSG/MCEBq7faBQqjVdiqBtKyXBu",
+      "role": "admin",
+      "adminType": "zoya",
+      "department": "Commerce",
+      "batch": "Class 10 (Maths & Science)",
+      "is_phone_verified": true,
+      "isVerified": true,
+      "createdAt": "2026-10-10T11:59:50.456Z"
+    },
+    {
+      "id": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "full_name": "Test Student One",
+      "name": "Test Student One",
+      "email": "testuser1@example.com",
+      "phone": "+919876500001",
+      "password_hash": "$2b$12$WEVIKCu4t..fTxd2UZed8OvTH78ODcihtUdGfJDBQkV0IB8EtdLYy",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_active": true,
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 10 (Maths & Science)",
+      "created_at": "2026-10-10T13:14:21.499Z",
+      "updated_at": "2026-10-10T13:14:22.292Z"
+    },
+    {
+      "id": "36c3a5b6-ff17-4403-8c9b-c08753233276",
+      "full_name": "Aman Sharma",
+      "name": "Aman Sharma",
+      "email": "aman.sharma@example.com",
+      "phone": "+919876500099",
+      "password_hash": "$2b$12$JJNO57Div9j/YhLjQQm1Ruxfy79/GAPXMgEdxP0PbZuabtyUmb59W",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_active": true,
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 10 (Maths & Science)",
+      "created_at": "2026-10-10T13:35:00.440Z",
+      "updated_at": "2026-10-10T13:36:00.228Z"
+    },
+    {
+      "id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "full_name": "Layba Qureshi",
+      "name": "Layba Qureshi",
+      "email": "student.layba@zmtuition.com",
+      "phone": "+917060961390",
+      "password_hash": "$2b$12$Ph8GxGerY7Ika02xFHa8IeiugMYXuEvHDcRC0Xx7htWBlgGXDqqqi",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_active": true,
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 10 (Maths & Science)",
+      "created_at": "2026-10-10T13:57:53.333Z",
+      "updated_at": "2026-10-10T14:00:01.865Z"
+    },
+    {
+      "id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "full_name": "zoya",
+      "name": "zoya",
+      "email": "businesszm437@gmail.com",
+      "phone": "+918869054108",
+      "password_hash": "$2b$10$6Cfiq9OF4MsJBpxKcaXDaODMLvEGDlUZ9W4XCkoI/4BWCpyYboDGK",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_active": true,
+      "role": "admin",
+      "adminType": "zoya",
+      "department": "Commerce, Science & Maths",
+      "batch": "All Batches (Commerce, Science & Maths)",
+      "created_at": "2026-10-10T14:25:03.951Z",
+      "updated_at": "2026-10-10T14:25:30.284Z"
+    },
+    {
+      "id": "s_1791710951143",
+      "name": "layba",
+      "full_name": "layba",
+      "email": "qureshizoya63@gmail.com",
+      "phone": "9457846286",
+      "rollNo": "1",
+      "role": "student",
+      "batch": "Class 10 (Maths & Science)",
+      "department": "Maths and Science",
+      "password_hash": "$2b$12$0JiLwvcVVYOOVLOXplZI4eqv.1VXIn6IOQfOO5STyUuMJqkH/EbW6",
+      "is_phone_verified": true,
+      "is_approved": true,
+      "created_at": "2026-10-11T09:29:11.144Z"
+    },
+    {
+      "id": "083873b1-cbff-4a7f-b717-cacc6797002b",
+      "full_name": "layba",
+      "name": "layba",
+      "email": "zoyaqureshi63@gmail.com",
+      "phone": "+918534088666",
+      "password_hash": "$2b$12$XoFITMBu9IZdNg8rFNcM5..uXXqCrtdtDHlrsKslzkNSsRAreTVfe",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_approved": true,
+      "is_active": true,
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "created_at": "2026-10-11T10:06:50.457Z",
+      "updated_at": "2026-10-11T10:49:00.552Z",
+      "rollNo": "ZM-374"
+    },
+    {
+      "id": "52cc1710-9287-4953-b785-ecd5ce845a5f",
+      "full_name": "muskan",
+      "name": "muskan",
+      "email": "businesszm437@gmail.com",
+      "phone": "+919358761531",
+      "password_hash": "$2b$12$li3UoAxMzjcqqTfDY/LeweWW1Mv/IVLQR4qoV2TpS8a5svuYmdZui",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_approved": true,
+      "is_active": true,
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 11 (Science) - Muskan Mam",
+      "created_at": "2026-10-11T11:52:00.273Z",
+      "updated_at": "2026-10-11T11:59:06.396Z",
+      "rollNo": "ZM-909"
+    },
+    {
+      "id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "full_name": "mohd",
+      "name": "mohd",
+      "email": "xotov34871@aahzz.com",
+      "phone": "+918791166590",
+      "password_hash": "$2b$12$PZcAmn4Nmzu43SUWh4tAbenwEk8bcO2kk8B2kblJ5o7PevxLevIxC",
+      "is_phone_verified": true,
+      "is_email_verified": false,
+      "is_approved": true,
+      "is_active": true,
+      "role": "student",
+      "adminType": null,
+      "department": "",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "created_at": "2026-10-12T04:33:53.885Z",
+      "updated_at": "2026-10-12T04:34:24.773Z",
+      "rollNo": "ZM-643"
+    }
+  ],
+  "otps": [
+    {
+      "email": "qlayba8@gmail.com",
+      "phone": "7060961390",
+      "otp": "843395",
+      "expiresAt": 1791637689631
+    }
+  ],
+  "batches": [
+    {
+      "id": "b1",
+      "name": "Class 11 & 12 (Commerce)",
+      "subject": "Accounts, Economics & Business Studies",
+      "time": "3:00 PM - 4:15 PM",
+      "days": "Mon - Sat",
+      "teacher": "Zoya",
+      "fee": 1000,
+      "meetLink": "https://meet.google.com/new"
+    },
+    {
+      "id": "b2",
+      "name": "Class 9 (Maths & Science)",
+      "subject": "Mathematics & Science",
+      "time": "4:15 PM - 5:15 PM",
+      "days": "Mon - Sat",
+      "teacher": "Muskan",
+      "fee": 600,
+      "meetLink": "https://meet.google.com/new"
+    },
+    {
+      "id": "b3",
+      "name": "Class 10 (Maths & Science)",
+      "subject": "Mathematics & Science",
+      "time": "5:15 PM - 6:15 PM",
+      "days": "Mon - Sat",
+      "teacher": "Muskan",
+      "fee": 600,
+      "meetLink": "https://meet.google.com/new"
+    },
+    {
+      "id": "b4",
+      "name": "Class 11 (Maths & Science)",
+      "subject": "Mathematics & Science",
+      "time": "6:15 PM - 7:30 PM",
+      "days": "Mon - Sat",
+      "teacher": "Muskan",
+      "fee": 1000,
+      "meetLink": "https://meet.google.com/new"
+    },
+    {
+      "id": "b5",
+      "name": "Class 12 (Maths & Science)",
+      "subject": "Mathematics & Science",
+      "time": "7:30 PM - 8:45 PM",
+      "days": "Mon - Sat",
+      "teacher": "Muskan",
+      "fee": 1000,
+      "meetLink": "https://meet.google.com/new"
+    }
+  ],
+  "attendance": {
+    "2026-10-10": {}
+  },
+  "notes": [
+    {
+      "id": "n1",
+      "title": "Chapter 1: Real Numbers & Polynomials",
+      "subject": "Mathematics",
+      "batch": "Class 10 (Maths & Science)",
+      "description": "Comprehensive formula sheet and exercise solutions.",
+      "link": "https://example.com/maths-ch1-notes.pdf",
+      "addedBy": "Muskan",
+      "date": "2026-10-08"
+    },
+    {
+      "id": "n3",
+      "title": "Science: Chemical Reactions and Equations",
+      "subject": "Science",
+      "batch": "Class 10 (Maths & Science)",
+      "description": "Handwritten key summary and NCERT question bank.",
+      "link": "https://example.com/science-ch1-notes.pdf",
+      "addedBy": "Muskan",
+      "date": "2026-10-10"
+    }
+  ],
+  "fees": [
+    {
+      "id": "f1",
+      "studentId": "sample1",
+      "studentName": "Aman Kumar",
+      "phone": "9876543210",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 0,
+      "status": "Paid",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "f_1791632838120",
+      "studentId": "u_1791632838120",
+      "studentName": "Ayan Khan",
+      "phone": "9876543210",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-10"
+    },
+    {
+      "id": "f_1791638061499",
+      "studentId": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "studentName": "Test Student One",
+      "phone": "+919876500001",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-10"
+    },
+    {
+      "id": "f_1791638089211",
+      "studentId": "84c5bf57-0047-475e-9f88-1b8f03d04981",
+      "studentName": "Test Student Two",
+      "phone": "+919876500002",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-10"
+    },
+    {
+      "id": "f_1791638090152",
+      "studentId": "c961ec1b-b8c3-4f9d-88ff-ad70f42a3cda",
+      "studentName": "Test Student Three",
+      "phone": "+919876500003",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-10"
+    },
+    {
+      "id": "f_1791639300440",
+      "studentId": "36c3a5b6-ff17-4403-8c9b-c08753233276",
+      "studentName": "Aman Sharma",
+      "phone": "+919876500099",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-10"
+    },
+    {
+      "id": "f_1791640673333",
+      "studentId": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "studentName": "Layba Qureshi",
+      "phone": "+917060961390",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-10"
+    },
+    {
+      "id": "f_1791710951144",
+      "studentId": "s_1791710951143",
+      "studentName": "layba",
+      "phone": "9457846286",
+      "batch": "Class 10 (Maths & Science)",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-11"
+    },
+    {
+      "id": "f_1791713210457",
+      "studentId": "083873b1-cbff-4a7f-b717-cacc6797002b",
+      "studentName": "aahad",
+      "phone": "+918534088666",
+      "batch": "Class 12 (Science) - Muskan Mam",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-11"
+    },
+    {
+      "id": "f_1791719520273",
+      "studentId": "52cc1710-9287-4953-b785-ecd5ce845a5f",
+      "studentName": "muskan",
+      "phone": "+919358761531",
+      "batch": "Class 11 (Science) - Muskan Mam",
+      "month": "October 2026",
+      "amount": 500,
+      "due": 500,
+      "status": "Due",
+      "date": "2026-10-11"
+    },
+    {
+      "id": "f_1791779633885",
+      "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "studentName": "mohd",
+      "phone": "+918791166590",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "month": "October 2026",
+      "amount": 600,
+      "due": 600,
+      "status": "Due",
+      "date": "2026-10-12"
+    }
+  ],
+  "tests": [
+    {
+      "id": "t_1791810819143",
+      "title": "Automated Diagnostic Assessment",
+      "subject": "Science",
+      "batch": "Class 10 (Science & Maths)",
+      "totalMarks": 20,
+      "durationMinutes": 15,
+      "isLive": true,
+      "proctoringEnabled": true,
+      "date": "2026-10-12",
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What is the chemical formula of rust?",
+          "options": [
+            "Fe2O3.xH2O",
+            "FeO",
+            "Fe3O4",
+            "FeCO3"
+          ],
+          "correctIndex": 0,
+          "marks": 10
+        },
+        {
+          "id": "q2",
+          "text": "Which lens is used in a magnifying glass?",
+          "options": [
+            "Convex lens",
+            "Concave lens",
+            "Cylindrical lens",
+            "Plano-concave"
+          ],
+          "correctIndex": 0,
+          "marks": 10
+        }
+      ],
+      "submissions": [
+        {
+          "id": "sub_1791810819179",
+          "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+          "studentName": "mohd",
+          "studentPhone": "+918791166590",
+          "batch": "Class 10 (Science & Maths) - Muskan Mam",
+          "status": "COMPLETED",
+          "warningsCount": 1,
+          "violationReason": "App minimized briefly",
+          "obtainedMarks": 20,
+          "totalMarks": 20,
+          "submittedAt": "2026-10-12T13:13:39.179Z"
+        }
+      ]
+    },
+    {
+      "id": "t_1791810737162",
+      "title": "Automated Diagnostic Assessment",
+      "subject": "Science",
+      "batch": "Class 10 (Science & Maths)",
+      "totalMarks": 20,
+      "durationMinutes": 15,
+      "isLive": true,
+      "proctoringEnabled": true,
+      "date": "2026-10-12",
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What is the chemical formula of rust?",
+          "options": [
+            "Fe2O3.xH2O",
+            "FeO",
+            "Fe3O4",
+            "FeCO3"
+          ],
+          "correctIndex": 0,
+          "marks": 10
+        },
+        {
+          "id": "q2",
+          "text": "Which lens is used in a magnifying glass?",
+          "options": [
+            "Convex lens",
+            "Concave lens",
+            "Cylindrical lens",
+            "Plano-concave"
+          ],
+          "correctIndex": 0,
+          "marks": 10
+        }
+      ],
+      "submissions": []
+    },
+    {
+      "id": "t_1791805599754",
+      "title": "Mathematics Chapter Test (12 Oct)",
+      "subject": "Mathematics",
+      "batch": "Class 10 (Maths & Science)",
+      "totalMarks": 10,
+      "durationMinutes": 15,
+      "isLive": true,
+      "proctoringEnabled": true,
+      "date": "2026-10-12",
+      "questions": [
+        {
+          "id": "q_1",
+          "text": "Which of the following represents the correct formula?",
+          "options": [
+            "Option A (Correct standard definition)",
+            "Option B (Secondary method)",
+            "Option C (Alternative formula)",
+            "Option D (None of the above)"
+          ],
+          "correctIndex": 0,
+          "marks": 5
+        },
+        {
+          "id": "q_2",
+          "text": "What is the primary unit or rule associated with this concept?",
+          "options": [
+            "Option 1 (Standard Unit)",
+            "Option 2 (Derived Unit)",
+            "Option 3 (Inverse rule)",
+            "Option 4 (Zero constant)"
+          ],
+          "correctIndex": 0,
+          "marks": 5
+        }
+      ],
+      "submissions": [
+        {
+          "id": "sub_1791805907184",
+          "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+          "studentName": "mohd",
+          "studentPhone": "+918791166590",
+          "batch": "Class 10 (Science & Maths) - Muskan Mam",
+          "status": "COMPLETED",
+          "warningsCount": 0,
+          "violationReason": null,
+          "obtainedMarks": 0,
+          "totalMarks": 10,
+          "submittedAt": "2026-10-12T11:51:47.184Z"
+        }
+      ]
+    },
+    {
+      "id": "t1",
+      "title": "Mathematics Unit Test 1 (Algebra)",
+      "subject": "Mathematics",
+      "batch": "Class 10 (Maths & Science)",
+      "totalMarks": 50,
+      "date": "2026-10-14",
+      "scores": [
+        {
+          "studentName": "Aman Kumar",
+          "roll": "101",
+          "marks": 44
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Accounts Balance Sheet Test",
+      "subject": "Accounts",
+      "batch": "Class 11 & 12 (Commerce)",
+      "totalMarks": 40,
+      "date": "2026-10-16",
+      "scores": []
+    }
+  ],
+  "notices": [
+    {
+      "id": "nt_1791806979697",
+      "title": "📚 New Note Uploaded: Accountancy - Chhaya Resume Larger Font Spaced",
+      "content": "New PDF / study material has been uploaded for Class 11 & 12 (Commerce). Check the Notes & Materials section to download.",
+      "date": "2026-10-12",
+      "department": "Commerce"
+    },
+    {
+      "id": "nt_1791805623249",
+      "title": "📚 New Note Uploaded: Accountancy - 51783863",
+      "content": "New PDF / study material has been uploaded for Class 11 & 12 (Commerce). Check the Notes & Materials section to download.",
+      "date": "2026-10-12",
+      "department": "Commerce"
+    },
+    {
+      "id": "nt1",
+      "title": "Upcoming Saturday Maths Test",
+      "content": "Chapter 3 & 4 test will be conducted this Saturday sharp at 4:00 PM. Bring formula sheets.",
+      "date": "2026-10-10",
+      "teacher": "Muskan",
+      "department": "Maths and Science"
+    },
+    {
+      "id": "nt2",
+      "title": "Commerce Accounts Project Submission",
+      "content": "Class 12 Commerce students must submit their partnership practical files by Monday.",
+      "date": "2026-10-09",
+      "teacher": "Zoya",
+      "department": "Commerce"
+    }
+  ],
+  "user_sessions": [
+    {
+      "id": "4740d0ea-ea09-41ae-b493-341ef47606f5",
+      "user_id": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "refresh_token_hash": "59d4e8eeaafbd0d887c990189d90e3eb20bf00a4d25a7656ce0d8da87d0918a5",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": true,
+      "expires_at": "2026-10-17T13:14:22.301Z",
+      "created_at": "2026-10-10T13:14:22.301Z"
+    },
+    {
+      "id": "d9a36d88-88dc-48e5-ac60-b59a8ad89785",
+      "user_id": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "refresh_token_hash": "9f5be738d07dec2c1dd632ad3b86ff520805e5003766b5214996aa03609564e1",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T13:14:22.977Z",
+      "created_at": "2026-10-10T13:14:22.977Z"
+    },
+    {
+      "id": "0a459092-f6d4-44ae-beec-a5903fb94f8f",
+      "user_id": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "refresh_token_hash": "90763eb1d0fe1b0d1d0187877d0484a525f36ec83cd7b3c934403ba81e9b9989",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T13:14:22.992Z",
+      "created_at": "2026-10-10T13:14:22.992Z"
+    },
+    {
+      "id": "36b66820-7a9a-4077-b083-3482f4e454c1",
+      "user_id": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "refresh_token_hash": "ef83ba64b2cc246d2415919a298971d6aa885c639a9efa89f6efac0fcb18eae4",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T13:14:46.875Z",
+      "created_at": "2026-10-10T13:14:46.875Z"
+    },
+    {
+      "id": "afc7d523-8e5b-4373-b896-2b56cacc111d",
+      "user_id": "75d157d7-ef92-4c7b-951f-b7930e829400",
+      "refresh_token_hash": "45a2627300c39bcf855cc541f3d7c87deddd0f4369dda6189455c92c0a232094",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T13:14:47.776Z",
+      "created_at": "2026-10-10T13:14:47.776Z"
+    },
+    {
+      "id": "36290e3a-af99-4baf-839a-6b5f3f1f9f91",
+      "user_id": "36c3a5b6-ff17-4403-8c9b-c08753233276",
+      "refresh_token_hash": "3004ae16d79eb630785ffe5d518b2c9284c791acf98c0554981e7a3f701d4473",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "::1",
+      "is_revoked": true,
+      "expires_at": "2026-10-17T13:36:00.306Z",
+      "created_at": "2026-10-10T13:36:00.306Z"
+    },
+    {
+      "id": "d201ebef-e3cb-46ce-84e7-1ef090b14205",
+      "user_id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "refresh_token_hash": "108298aa8aa22052741313e290698f015727ec03063dbd400f2dd4d0bec0c444",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T14:00:01.902Z",
+      "created_at": "2026-10-10T14:00:01.902Z"
+    },
+    {
+      "id": "65164e4b-b4d6-4fbd-aef7-47b14e093d6a",
+      "user_id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "refresh_token_hash": "1791a8aee003814fe20bf3db02d513e8d8105c91f91ac0b13fd531d7bbad3baa",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T14:00:50.950Z",
+      "created_at": "2026-10-10T14:00:50.950Z"
+    },
+    {
+      "id": "40be5d36-4c1d-4efe-a28c-678fa2465d9e",
+      "user_id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "refresh_token_hash": "b1b73cc2ee3f571fe806b883a5d4bb08ac3c0e56a2226da28b9cc8009d7a9bf1",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T14:00:55.003Z",
+      "created_at": "2026-10-10T14:00:55.003Z"
+    },
+    {
+      "id": "1e4b2acf-858b-43a8-92ca-27ddae07fcad",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "226e192449cdd37e8e2b64e306d4f208bf96c42a9aaae6ebcf0bedc465aaf435",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T14:25:30.345Z",
+      "created_at": "2026-10-10T14:25:30.345Z"
+    },
+    {
+      "id": "ae49a3eb-bd98-4273-8aa3-e656eaadc629",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "f429d7bef2a01f8589676e00d8bcd661a33e7ae34eea62f5d99f1f23a42f743b",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "::1",
+      "is_revoked": true,
+      "expires_at": "2026-10-17T14:26:07.128Z",
+      "created_at": "2026-10-10T14:26:07.128Z"
+    },
+    {
+      "id": "36adf99a-b67c-4761-b905-a4d9ca053237",
+      "user_id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "refresh_token_hash": "6baadcc5db41bb1de8c1ad3e5d4f447584b62334f1fd17dad39469b67c1250c7",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T15:46:11.772Z",
+      "created_at": "2026-10-10T15:46:11.773Z"
+    },
+    {
+      "id": "7a7b867d-7f4f-4f79-8393-5895494379fb",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "9cd13de5ef05779d96404a816d03cc9b4becdcb00228dddc70dfc58c7b80da16",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T15:47:41.166Z",
+      "created_at": "2026-10-10T15:47:41.166Z"
+    },
+    {
+      "id": "d34743e8-45b5-4a79-9def-9efb53d8a9d1",
+      "user_id": "admin_muskan",
+      "refresh_token_hash": "933778aa999b322be2b4e9eca4ecd185d9e0f1fec1019a76713ecefbb6e5ec55",
+      "user_agent": "App Client",
+      "ip_address": "::1",
+      "is_revoked": false,
+      "expires_at": "2026-10-17T15:47:41.928Z",
+      "created_at": "2026-10-10T15:47:41.928Z"
+    },
+    {
+      "id": "8c78e4e3-fc5d-427b-8467-69546cec8561",
+      "user_id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "refresh_token_hash": "e5f632b60af9215ba2ae0ee4cc4416f78331dd70d777c5fb05f3c93e825e358a",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "::1",
+      "is_revoked": true,
+      "expires_at": "2026-10-17T15:52:04.136Z",
+      "created_at": "2026-10-10T15:52:04.136Z"
+    },
+    {
+      "id": "291badf8-829f-4981-b88a-affbc85dd2de",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "1429807302ef1e16a4224fa11734282f3245e359bfaf76a0142b86b3fe170605",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "::1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T04:50:04.783Z",
+      "created_at": "2026-10-11T04:50:04.784Z"
+    },
+    {
+      "id": "be688963-e935-4db9-9f12-1134f070adab",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "0254891837a212a7b5f8f617cbba43535276d10dc8cf728d38221c32566ea220",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T08:10:03.180Z",
+      "created_at": "2026-10-11T08:10:03.183Z"
+    },
+    {
+      "id": "150ddd68-0668-4563-a212-ebf7af26350b",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "e3d35aac86dbad773871074b347c19b2f45f4f4026e2d51654d85e2a6e5823f8",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T09:10:31.551Z",
+      "created_at": "2026-10-11T09:10:31.551Z"
+    },
+    {
+      "id": "731b561a-aa4c-477d-8d7e-02b05db58acc",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "6ef381997136b9205fc95c98b0c09c58a27cc81e8d2eb2d4ec80322d0d6552a8",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T09:15:18.285Z",
+      "created_at": "2026-10-11T09:15:18.285Z"
+    },
+    {
+      "id": "4c70815b-646f-4c0a-8d5d-cd04c93daeb7",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "add544ff2b8c89fd1d0bc51d3bb8cd7838e88d3e923cd8947186404b3dba1078",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T09:26:21.129Z",
+      "created_at": "2026-10-11T09:26:21.129Z"
+    },
+    {
+      "id": "ea4edbf1-8e56-408b-b3e5-864c95831869",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "6467d667b63f7907b60a5f4b1adaa161c6355162898a8b0f1d7f9a1ce66580c0",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T09:33:10.886Z",
+      "created_at": "2026-10-11T09:33:10.886Z"
+    },
+    {
+      "id": "fd8e1c2e-4bd9-459f-a54e-ce88c956d69b",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "592666ffab852def50d20ae82e82641f3861722c7713463ce1c205ce55a73ded",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T09:41:36.416Z",
+      "created_at": "2026-10-11T09:41:36.417Z"
+    },
+    {
+      "id": "d821b7de-0bfe-44e2-a72b-1d8ff522299d",
+      "user_id": "u_1791632838120",
+      "refresh_token_hash": "37e008a78ea96ae487253ec2bea2c940515af54231cba7a3c71acac10ead2cf8",
+      "user_agent": "node",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-18T09:47:06.453Z",
+      "created_at": "2026-10-11T09:47:06.453Z"
+    },
+    {
+      "id": "70c01d06-d69b-4da9-bd37-6a0f6c8f9a48",
+      "user_id": "u_1791633590456",
+      "refresh_token_hash": "b612b9cf239d072b7805ccc8ffafde62becf594bade4c31596e9c4d8a421380c",
+      "user_agent": "node",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-18T09:47:34.224Z",
+      "created_at": "2026-10-11T09:47:34.224Z"
+    },
+    {
+      "id": "43b1fb5f-4b52-4121-9e95-8a8869afd7d8",
+      "user_id": "083873b1-cbff-4a7f-b717-cacc6797002b",
+      "refresh_token_hash": "b1eef48c96cb3ba09f07b09f9a38529a1e22f9cc30024e11817b8500a58fe5fd",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-18T10:49:00.597Z",
+      "created_at": "2026-10-11T10:49:00.597Z"
+    },
+    {
+      "id": "fed88b7a-2e74-49d3-a684-20e63f9cb7b3",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "837929312b1e2137a06188432ae0d940754d204803935df4753f912614adfe97",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T10:51:23.706Z",
+      "created_at": "2026-10-11T10:51:23.706Z"
+    },
+    {
+      "id": "a2b1ceaa-a0e8-40c6-9938-58cb036919a3",
+      "user_id": "083873b1-cbff-4a7f-b717-cacc6797002b",
+      "refresh_token_hash": "f70954926add1d88f78cadbd3ec34281954fdddd3908830de298d0d1a656705d",
+      "user_agent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9549",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-18T11:32:22.564Z",
+      "created_at": "2026-10-11T11:32:22.564Z"
+    },
+    {
+      "id": "ca23cc04-c286-4a17-b124-bd06dd6bb6fa",
+      "user_id": "s_1791710951143",
+      "refresh_token_hash": "174708e52a4c392ee4c65e13713cc57d67612b47f6b7dd6f5ae3c553a45b3f64",
+      "user_agent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9549",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-18T11:32:48.198Z",
+      "created_at": "2026-10-11T11:32:48.198Z"
+    },
+    {
+      "id": "7732217a-2d26-4917-9e89-d36c909306ad",
+      "user_id": "52cc1710-9287-4953-b785-ecd5ce845a5f",
+      "refresh_token_hash": "27757a15b016cd3dc944a589c1958e04a6abb22f7f21fcc31349be0a150340d5",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T11:54:56.976Z",
+      "created_at": "2026-10-11T11:54:56.976Z"
+    },
+    {
+      "id": "d12db7da-e644-4b9a-a503-9e68600d8144",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "d5cec4e9a29920055cd303a361dde33f51d210bb8fdfa57067dfbdb41f0bec18",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T11:56:01.792Z",
+      "created_at": "2026-10-11T11:56:01.792Z"
+    },
+    {
+      "id": "36a20934-4924-4a5e-a3bc-4213d3c3de97",
+      "user_id": "52cc1710-9287-4953-b785-ecd5ce845a5f",
+      "refresh_token_hash": "e33e891c78d346249d44fcedab2bfbaac11e41a8b900ee05620ea202d1b86545",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T11:57:16.828Z",
+      "created_at": "2026-10-11T11:57:16.828Z"
+    },
+    {
+      "id": "65a8bdfe-5ad3-4ffe-b926-ae68a6946096",
+      "user_id": "52cc1710-9287-4953-b785-ecd5ce845a5f",
+      "refresh_token_hash": "7c618fe43a7f22e0fce937e9d34bb93f5009345ac8d0779ee20bcd51939303c1",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-18T13:17:36.467Z",
+      "created_at": "2026-10-11T13:17:36.468Z"
+    },
+    {
+      "id": "2b4ead61-6e41-4bd8-8a40-a881cf25c209",
+      "user_id": "52cc1710-9287-4953-b785-ecd5ce845a5f",
+      "refresh_token_hash": "8687e3d6ec5e7bea44b6536c179f4e6650ff64a8f2de8f1210482d265bfa88e1",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T04:02:31.720Z",
+      "created_at": "2026-10-12T04:02:31.720Z"
+    },
+    {
+      "id": "9524a0d0-c241-4c78-9974-a7cdb6aa4b7c",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "a56028e408af5837dad0c6f2143196c4f5b55e3cf0606e29aa50743e1cacef07",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T04:04:28.954Z",
+      "created_at": "2026-10-12T04:04:28.954Z"
+    },
+    {
+      "id": "35fd1467-260f-42d9-a373-82bd1ca7d166",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "df74baa2bf63abaae79bdc17a393dfb8aec2ea47ec07303b213f2d5da701105e",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T04:20:00.459Z",
+      "created_at": "2026-10-12T04:20:00.460Z"
+    },
+    {
+      "id": "0cf4aeba-98c5-4956-ac2d-1bd1080383b8",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "58935bdb73def7a199bcb72a7011891cd4978172cb19b10d8add8733fb66b330",
+      "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 26_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/155.0.8059.37 Mobile/15E148 Safari/604.1",
+      "ip_address": "192.168.1.2",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T04:34:24.792Z",
+      "created_at": "2026-10-12T04:34:24.792Z"
+    },
+    {
+      "id": "fda77745-ab98-4da9-938d-488a62d998ef",
+      "user_id": "1f5ebe72-9821-4759-8fff-b4c47fd78469",
+      "refresh_token_hash": "084062e39a1c0fc23961dcb58032f1d052d9892bee290fdcef193446f89e8f15",
+      "user_agent": "node",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T09:42:11.666Z",
+      "created_at": "2026-10-12T09:42:11.666Z"
+    },
+    {
+      "id": "f81b8a95-0a7a-4225-9a1a-6270c091af40",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "b09e1b3fff635eae8e7cc33380619b21b4006dfe01cb507321ccf00a31528343",
+      "user_agent": "node",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T09:44:54.214Z",
+      "created_at": "2026-10-12T09:44:54.214Z"
+    },
+    {
+      "id": "e2badd9e-e9b2-4995-ba24-20cbeca4eb59",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "83431f698f15577b4a42a099dbf273e4602e31f1b9db5fb013cc73853619d31d",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T10:31:57.693Z",
+      "created_at": "2026-10-12T10:31:57.693Z"
+    },
+    {
+      "id": "3c699179-e094-43ce-9312-13e18ab41dfb",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "722ff0660723662b95f5d5f236cacaa4611cbdffc8a2d5e3db0b1e268a802140",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T11:04:25.145Z",
+      "created_at": "2026-10-12T11:04:25.145Z"
+    },
+    {
+      "id": "e75f82ed-3dc0-4a78-bfa8-1a6feb17830a",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "c94cce3a4fdf82d4b2bf95e148daff1f0865f172e97fdafb8eb2a7bc37e701ba",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T11:44:35.731Z",
+      "created_at": "2026-10-12T11:44:35.732Z"
+    },
+    {
+      "id": "be1de89b-9139-4290-8350-5cd05b2851bf",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "40ed3e71d1506ce8242c3c9d11b7925d15e4161afbfcec2ef0bf2847764326cf",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T11:51:18.147Z",
+      "created_at": "2026-10-12T11:51:18.147Z"
+    },
+    {
+      "id": "9c6da5ae-b95f-477d-b950-80c27ec0ac26",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "4b7985781359887549ca71106d37eaf3f7ae685d563c356ee2f4b5b2559fc1e1",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T12:09:15.011Z",
+      "created_at": "2026-10-12T12:09:15.011Z"
+    },
+    {
+      "id": "4f314c27-9331-4be2-bc18-4c3390acf0fa",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "32502dcaa6183d54369235a5a2b3119b2bf396401cb61ad82e5eaaa6bdf873d7",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T12:10:10.060Z",
+      "created_at": "2026-10-12T12:10:10.060Z"
+    },
+    {
+      "id": "6a953bdb-1895-4cf6-ad2d-6f86126d14dc",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "f2b2956984128c62728aff2e7c6df37f95fb573bcf99cc117e5f620aeb698508",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:12:16.804Z",
+      "created_at": "2026-10-12T13:12:16.804Z"
+    },
+    {
+      "id": "4a419902-754a-4a2d-ac8e-18f57c443299",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "f63c52ff1972fd4efb50fcf8069efdee2a6fff59542e48964091ed6d17b5be70",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:12:17.151Z",
+      "created_at": "2026-10-12T13:12:17.151Z"
+    },
+    {
+      "id": "9fcc3b32-371d-4c13-b04a-f2267449e32f",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "1c09c0efa7c31a8b8acc245a981467d48dab94091be71be63c6c5a6e40463312",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:13:38.236Z",
+      "created_at": "2026-10-12T13:13:38.236Z"
+    },
+    {
+      "id": "5309e5a9-2268-4692-9f74-1cfdd477877f",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "0514f198fa1eb915635bc5b0872c7b8a32db7818731a84397091720c5f76318e",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:13:38.812Z",
+      "created_at": "2026-10-12T13:13:38.812Z"
+    },
+    {
+      "id": "bc15e711-c9da-41d3-bd87-171fe778859a",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "a6dbe3a9b62df1f00f1f060cdef4a755e643be589dd08068542b42339016cbac",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:16:23.053Z",
+      "created_at": "2026-10-12T13:16:23.053Z"
+    },
+    {
+      "id": "ab6e2c22-42ca-43ba-9d2c-37e65a84a343",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "243785dd5121fbb51839639a1330d6920a06bc50ab6e9a9c3cf999e797e190c4",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:18:24.389Z",
+      "created_at": "2026-10-12T13:18:24.389Z"
+    },
+    {
+      "id": "f262acf0-c200-468b-812a-b9f6ee7f8c28",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "4b6f618dcd4afcaccb079ba391826500bb971045bea22adfba1ee1962e53000e",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:18:25.362Z",
+      "created_at": "2026-10-12T13:18:25.362Z"
+    },
+    {
+      "id": "a0ec1994-05ae-4067-8371-245d1e5a724b",
+      "user_id": "38d6e7b8-8f02-4783-b2b4-9764c431bbce",
+      "refresh_token_hash": "43345dffaafb6863dc204c01f6d582b56e6945f177a16057db977b85491ddb48",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:20:11.473Z",
+      "created_at": "2026-10-12T13:20:11.473Z"
+    },
+    {
+      "id": "d0792427-3553-41a1-8ccd-646333ca0499",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "af7605cf43ebba1af3232a18591dbb01da17682b31b9206a48ad2ba8903b75a4",
+      "user_agent": "App Client",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:20:12.105Z",
+      "created_at": "2026-10-12T13:20:12.105Z"
+    },
+    {
+      "id": "da3680f1-4f7e-4116-8865-26afb86ee4e4",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "3568d09dacce6653ca9d5860bd8979662e1b7eaa96e2aaec3e457d97ba475cc0",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T13:21:54.930Z",
+      "created_at": "2026-10-12T13:21:54.930Z"
+    },
+    {
+      "id": "89f8f2dc-0a8f-4bc0-ab67-e0b8f8758b17",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "71e4d0623a418273eebf12cd9669957658fa25141bdba3859f16a7ec0208a0ca",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T13:24:22.137Z",
+      "created_at": "2026-10-12T13:24:22.137Z"
+    },
+    {
+      "id": "982fe7b6-d39a-413e-937c-decdfedc9416",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "a75a7009264df515ffae444f2644fe6e3ce8883f87f889e9c0a0c4e5545a97e7",
+      "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+      "ip_address": "192.168.1.7",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T13:35:30.485Z",
+      "created_at": "2026-10-12T13:35:30.485Z"
+    },
+    {
+      "id": "c9fdbbae-7d55-4ffd-9834-8ed2d8027dd0",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "99a33c6bde3c177e5a29ebd232501effb2de0f3c556776ae3386097d885507cf",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T14:09:50.921Z",
+      "created_at": "2026-10-12T14:09:50.921Z"
+    },
+    {
+      "id": "a69bd94d-9781-412c-9cee-eb7b2b69256f",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "2d8f6a62babf5072332ea339330844090d824168e51be92b5bc979a8fa2a8f0e",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": true,
+      "expires_at": "2026-10-19T14:18:49.390Z",
+      "created_at": "2026-10-12T14:18:49.390Z"
+    },
+    {
+      "id": "38895c5b-3fab-42f0-b11d-d70e0d41d6d8",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "e2a2cd691b1b15511c4e28cace79b72c6843e8157a530271ca81ce698e60ef55",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ip_address": "127.0.0.1",
+      "is_revoked": false,
+      "expires_at": "2026-10-19T14:39:51.021Z",
+      "created_at": "2026-10-12T14:39:51.021Z"
+    },
+    {
+      "id": "3ed4b155-108a-4a8d-abe3-7dc92706c4ab",
+      "user_id": "admin_zoya",
+      "refresh_token_hash": "b00535563d4ba84e666f83acaed293099d6c6f844380824d920ba6ceac68a619",
+      "user_agent": "Dart/3.13 (dart:io)",
+      "ip_address": "192.168.1.6",
+      "is_revoked": true,
+      "expires_at": "2026-10-20T03:03:09.663Z",
+      "created_at": "2026-10-13T03:03:09.665Z"
+    },
+    {
+      "id": "a53fcd75-bc4c-4af9-8979-d25ad021be38",
+      "user_id": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "refresh_token_hash": "ebe784a0599f459cbb7d7b350d8772ece51d2b22aba2267b5cc64520ccc7614d",
+      "user_agent": "Dart/3.13 (dart:io)",
+      "ip_address": "192.168.1.6",
+      "is_revoked": false,
+      "expires_at": "2026-10-20T03:09:17.672Z",
+      "created_at": "2026-10-13T03:09:17.893Z"
+    }
+  ],
+  "admin_passkey": "ZoyaMuskan@zm",
+  "proctoring_logs": [
+    {
+      "id": "sub_1791811212135",
+      "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "studentName": "mohd",
+      "studentPhone": "+918791166590",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "status": "COMPLETED",
+      "warningsCount": 1,
+      "violationReason": "App minimized briefly",
+      "obtainedMarks": 20,
+      "totalMarks": 20,
+      "submittedAt": "2026-10-12T13:20:12.135Z",
+      "testId": "t_1791811212120",
+      "testTitle": "Automated Diagnostic Assessment"
+    },
+    {
+      "id": "sub_1791811105411",
+      "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "studentName": "mohd",
+      "studentPhone": "+918791166590",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "status": "COMPLETED",
+      "warningsCount": 1,
+      "violationReason": "App minimized briefly",
+      "obtainedMarks": 20,
+      "totalMarks": 20,
+      "submittedAt": "2026-10-12T13:18:25.411Z",
+      "testId": "t_1791811105389",
+      "testTitle": "Automated Diagnostic Assessment"
+    },
+    {
+      "id": "sub_1791810819179",
+      "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "studentName": "mohd",
+      "studentPhone": "+918791166590",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "status": "COMPLETED",
+      "warningsCount": 1,
+      "violationReason": "App minimized briefly",
+      "obtainedMarks": 20,
+      "totalMarks": 20,
+      "submittedAt": "2026-10-12T13:13:39.179Z",
+      "testId": "t_1791810819143",
+      "testTitle": "Automated Diagnostic Assessment"
+    },
+    {
+      "id": "sub_1791805907184",
+      "studentId": "dfe9f154-ed9c-488b-8d71-42a4c9239f97",
+      "studentName": "mohd",
+      "studentPhone": "+918791166590",
+      "batch": "Class 10 (Science & Maths) - Muskan Mam",
+      "status": "COMPLETED",
+      "warningsCount": 0,
+      "violationReason": null,
+      "obtainedMarks": 0,
+      "totalMarks": 10,
+      "submittedAt": "2026-10-12T11:51:47.184Z",
+      "testId": "t_1791805599754",
+      "testTitle": "Mathematics Chapter Test (12 Oct)"
+    }
+  ]
+}

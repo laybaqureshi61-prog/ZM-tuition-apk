@@ -18,8 +18,8 @@ class ApiService {
       }
       return '$scheme://$host:${Uri.base.port}/api';
     }
-    // Mobile / native default:
-    return 'http://192.168.1.3:5000/api';
+    // Mobile / native default (24/7 Cloud API):
+    return 'https://zm-tuition-apk.onrender.com/api';
   }
 
   static String baseUrl = defaultBaseUrl;

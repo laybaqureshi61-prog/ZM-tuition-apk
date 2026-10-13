@@ -7,8 +7,6 @@ import '../../theme/app_theme.dart';
 import '../auth/login_screen.dart';
 import '../common/settings_screen.dart';
 import '../common/pdf_preview_dialog.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:image_picker/image_picker.dart';
 import 'admin_students_screen.dart';
 import 'admin_attendance_screen.dart';
 import 'admin_notes_screen.dart';

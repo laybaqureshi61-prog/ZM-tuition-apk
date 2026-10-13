@@ -26,9 +26,13 @@ zm_app/android/app/upload-keystore.jks
 Thumbs.db
 *.apk
 
-# Decompiled leftovers
-META-INF/
-kotlin/
-org/
-res/
-assets/
+# Decompiled leftovers in root
+/META-INF/
+/kotlin/
+/org/
+/res/
+/assets/
+
+# Keep web assets
+!backend/public/assets/
+!backend/public/assets/**

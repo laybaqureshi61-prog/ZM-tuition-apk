@@ -1225,7 +1225,7 @@
       "refresh_token_hash": "ebe784a0599f459cbb7d7b350d8772ece51d2b22aba2267b5cc64520ccc7614d",
       "user_agent": "Dart/3.13 (dart:io)",
       "ip_address": "192.168.1.6",
-      "is_revoked": false,
+      "is_revoked": true,
       "expires_at": "2026-10-20T03:09:17.672Z",
       "created_at": "2026-10-13T03:09:17.893Z"
     }

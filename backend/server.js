@@ -48,8 +48,22 @@ const buildDir = fs.existsSync(path.join(__dirname, 'public'))
 if (fs.existsSync(buildDir)) {
   console.log(`[STATIC] Serving Flutter Web frontend from: ${buildDir}`);
   app.use(express.static(buildDir));
+
+  // Dedicated handler for missing asset manifests to prevent Flutter JSON parse errors
+  app.get(['/assets/AssetManifest.json', '/AssetManifest.json'], (req, res) => {
+    res.json({});
+  });
+
+  // Catch-all 404 for API endpoints (always JSON, never HTML)
+  app.use('/api', (req, res) => {
+    res.status(404).json({ error: 'API route not found', path: req.originalUrl });
+  });
+
+  // SPA fallback for HTML page navigations only
   app.use((req, res, next) => {
-    if (req.url.startsWith('/api')) return next();
+    if (req.path.includes('.') || req.path.startsWith('/assets/')) {
+      return res.status(404).send('Not Found');
+    }
     res.sendFile(path.join(buildDir, 'index.html'));
   });
 } else {

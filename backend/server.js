@@ -40,13 +40,21 @@ app.use('/api', tuitionRoutes);
 
 // Serve Flutter Web release build
 const path = require('path');
-const buildDir = path.join(__dirname, '../zm_app/build/web');
-app.use(express.static(buildDir));
+const fs = require('fs');
+const buildDir = fs.existsSync(path.join(__dirname, 'public'))
+  ? path.join(__dirname, 'public')
+  : path.join(__dirname, '../zm_app/build/web');
 
-app.use((req, res, next) => {
-  if (req.url.startsWith('/api')) return next();
-  res.sendFile(path.join(buildDir, 'index.html'));
-});
+if (fs.existsSync(buildDir)) {
+  console.log(`[STATIC] Serving Flutter Web frontend from: ${buildDir}`);
+  app.use(express.static(buildDir));
+  app.use((req, res, next) => {
+    if (req.url.startsWith('/api')) return next();
+    res.sendFile(path.join(buildDir, 'index.html'));
+  });
+} else {
+  console.log(`[STATIC] Warning: Web build directory not found at ${buildDir}`);
+}
 
 // MongoDB connection
 if (process.env.MONGO_URI) {

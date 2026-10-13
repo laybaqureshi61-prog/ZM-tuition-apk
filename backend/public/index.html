@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="ZM Tuition - Premier Coaching for Commerce and Science & Maths (Classes 9th to 12th).">
+  <meta name="theme-color" content="#0C4D4A">
+
+  <!-- iOS / iPhone Safari meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ZM Tuition">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Android / Chrome web app tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>ZM Tuition</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      background-color: #D2EBE6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- High-Polish Mobile Loading Screen -->
+  <div id="loading" style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#D2EBE6;font-family:system-ui, -apple-system, sans-serif;z-index:999999;padding:24px;box-sizing:border-box;text-align:center;">
+    <div style="width:68px;height:68px;background:#0C4D4A;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(12,77,74,0.25);margin-bottom:16px;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+      </svg>
+    </div>
+    <div style="font-size:22px;font-weight:900;color:#0C4D4A;letter-spacing:-0.5px;">ZM Tuition</div>
+    <div style="font-size:13px;color:#32605D;font-weight:600;margin-top:4px;margin-bottom:24px;">Zoya & Muskan Management System</div>
+    <div style="width:36px;height:36px;border:3.5px solid rgba(12,77,74,0.18);border-top-color:#0C4D4A;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+    <div id="load-msg" style="margin-top:14px;font-size:13px;color:#0C4D4A;font-weight:600;">Loading Tuition Portal...</div>
+    <button id="retry-btn" onclick="window.location.reload(true)" style="display:none;margin-top:18px;padding:8px 18px;background:#0C4D4A;color:#fff;border:none;border-radius:20px;font-weight:bold;font-size:13px;cursor:pointer;">Refresh Portal</button>
+  </div>
+
+  <script>
+    // Clean up any stale service workers to prevent cached chunk errors on mobile
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let r of registrations) { r.unregister(); }
+      });
+    }
+
+    // Auto-hide loading screen once Flutter renders
+    function hideLoader() {
+      var l = document.getElementById('loading');
+      if (l) l.style.display = 'none';
+    }
+
+    window.addEventListener('flutter-first-frame', hideLoader);
+
+    var observer = new MutationObserver(function() {
+      if (document.querySelector('flt-glass-pane') || document.querySelector('flutter-view')) {
+        hideLoader();
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Fallback timer if loading takes longer than 10 seconds
+    setTimeout(function() {
+      var btn = document.getElementById('retry-btn');
+      var msg = document.getElementById('load-msg');
+      if (btn && document.getElementById('loading').style.display !== 'none') {
+        btn.style.display = 'inline-block';
+        if (msg) msg.innerText = 'Finishing setup... Tap below to refresh if needed.';
+      }
+    }, 10000);
+  </script>
+
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

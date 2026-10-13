@@ -8,15 +8,16 @@ import '../models/user_model.dart';
 class ApiService {
   static String get defaultBaseUrl {
     if (kIsWeb) {
-      final scheme = Uri.base.scheme == 'https' ? 'https' : 'http';
+      final scheme = Uri.base.scheme.isNotEmpty ? Uri.base.scheme : 'https';
       final host = Uri.base.host.isNotEmpty ? Uri.base.host : 'localhost';
-      if (Uri.base.port == 80 || Uri.base.port == 443 || Uri.base.port == 0) {
+      final port = Uri.base.port;
+      if (scheme == 'https' || port == 443 || port == 80 || port == 0) {
         return '$scheme://$host/api';
       }
-      if (Uri.base.port == 3000) {
+      if (port == 3000) {
         return '$scheme://$host:5000/api';
       }
-      return '$scheme://$host:${Uri.base.port}/api';
+      return '$scheme://$host:$port/api';
     }
     // Mobile / native default (24/7 Cloud API):
     return 'https://zm-tuition-apk.onrender.com/api';

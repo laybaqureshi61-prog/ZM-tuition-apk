@@ -67,28 +67,31 @@
     // Auto-hide loading screen once Flutter renders
     function hideLoader() {
       var l = document.getElementById('loading');
-      if (l) l.style.display = 'none';
+      if (l && l.style.display !== 'none') {
+        l.style.opacity = '0';
+        l.style.transition = 'opacity 0.3s ease';
+        setTimeout(function() { l.style.display = 'none'; }, 300);
+      }
     }
 
     window.addEventListener('flutter-first-frame', hideLoader);
 
-    var observer = new MutationObserver(function() {
-      if (document.querySelector('flt-glass-pane') || document.querySelector('flutter-view')) {
+    // Periodic check for canvas or Flutter elements
+    var checkTimer = setInterval(function() {
+      if (document.querySelector('flt-glass-pane') || 
+          document.querySelector('flutter-view') || 
+          document.querySelector('flt-scene-host') || 
+          document.querySelector('canvas')) {
         hideLoader();
-        observer.disconnect();
+        clearInterval(checkTimer);
       }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    }, 300);
 
-    // Fallback timer if loading takes longer than 10 seconds
+    // Safety timeout: Always reveal UI after 4.5 seconds maximum
     setTimeout(function() {
-      var btn = document.getElementById('retry-btn');
-      var msg = document.getElementById('load-msg');
-      if (btn && document.getElementById('loading').style.display !== 'none') {
-        btn.style.display = 'inline-block';
-        if (msg) msg.innerText = 'Finishing setup... Tap below to refresh if needed.';
-      }
-    }, 10000);
+      hideLoader();
+      clearInterval(checkTimer);
+    }, 4500);
   </script>
 
   <script src="flutter_bootstrap.js" async></script>

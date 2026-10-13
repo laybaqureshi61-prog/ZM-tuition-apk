@@ -32,26 +32,35 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateAfterDelay() async {
-    await ApiService.initBaseUrl();
-    await Future.delayed(const Duration(milliseconds: 1800));
+    try {
+      await ApiService.initBaseUrl();
+      await Future.delayed(const Duration(milliseconds: 1400));
 
-    final user = await ApiService.getSavedUser();
-    if (!mounted) return;
+      final user = await ApiService.getSavedUser();
+      if (!mounted) return;
 
-    if (user != null) {
-      if (user.role == 'admin') {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => AdminDashboard(user: user)),
-        );
+      if (user != null) {
+        if (user.role == 'admin') {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => AdminDashboard(user: user)),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => StudentDashboard(user: user)),
+          );
+        }
       } else {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => StudentDashboard(user: user)),
+          MaterialPageRoute(builder: (_) => const WelcomeScreen()),
         );
       }
-    } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-      );
+    } catch (e) {
+      debugPrint('SplashScreen navigation error: $e');
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        );
+      }
     }
   }
 

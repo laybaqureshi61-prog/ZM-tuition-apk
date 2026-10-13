@@ -18,6 +18,7 @@ class ApiService {
       }
       return '$scheme://$host:${Uri.base.port}/api';
     }
+    // Mobile / native default:
     return 'http://192.168.1.3:5000/api';
   }
 
@@ -31,8 +32,7 @@ class ApiService {
 
   static Future<void> initBaseUrl() async {
     if (kIsWeb) {
-      final host = Uri.base.host.isNotEmpty ? Uri.base.host : 'localhost';
-      baseUrl = 'http://$host:5000/api';
+      baseUrl = defaultBaseUrl;
       return;
     }
     final prefs = await SharedPreferences.getInstance();
